@@ -1,0 +1,21 @@
+digraph "multi_agent" {
+  rankdir=LR;
+  node [shape=box, style="rounded,filled", fontname="-apple-system,Helvetica,sans-serif", fontsize=11, margin="0.2,0.08"];
+  edge [fontname="-apple-system,Helvetica,sans-serif", fontsize=9];
+  "Operation:bbbbbbbbbbbbbbb1" [label="Operation\nbbbbbbbbbbbbbbb1", fillcolor="#f0f9ff", color="#0ea5e9"];
+  "Session:conv-3" [label="Session\nconv-3", fillcolor="#eef2ff", color="#6366f1"];
+  "Agent:orchestrator" [label="Agent\norchestrator", fillcolor="#ecfdf5", color="#10b981"];
+  "Operation:bbbbbbbbbbbbbbb2" [label="Operation\nbbbbbbbbbbbbbbb2", fillcolor="#f0f9ff", color="#0ea5e9"];
+  "Agent:specialist" [label="Agent\nspecialist", fillcolor="#ecfdf5", color="#10b981"];
+  "Operation:bbbbbbbbbbbbbbb3" [label="Operation\nbbbbbbbbbbbbbbb3", fillcolor="#f0f9ff", color="#0ea5e9"];
+  "Model:anthropic/claude-opus-4-7" [label="Model\nanthropic/claude-opus-4-7", fillcolor="#fffbeb", color="#f59e0b"];
+  "Session:conv-3" -> "Operation:bbbbbbbbbbbbbbb1" [label="CONTAINS", color="#475569", style="solid"];
+  "Operation:bbbbbbbbbbbbbbb2" -> "Operation:bbbbbbbbbbbbbbb3" [label="PARENT_OF", color="#64748b", style="dashed"];
+  "Agent:orchestrator" -> "Operation:bbbbbbbbbbbbbbb1" [label="INVOKED", color="#475569", style="solid"];
+  "Agent:orchestrator" -> "Agent:specialist" [label="DELEGATED_TO", color="#9333ea", style="solid"];
+  "Operation:bbbbbbbbbbbbbbb3" -> "Model:anthropic/claude-opus-4-7" [label="EXECUTED", color="#475569", style="solid"];
+  "Session:conv-3" -> "Operation:bbbbbbbbbbbbbbb3" [label="CONTAINS", color="#475569", style="solid"];
+  "Agent:specialist" -> "Operation:bbbbbbbbbbbbbbb2" [label="INVOKED", color="#475569", style="solid"];
+  "Session:conv-3" -> "Operation:bbbbbbbbbbbbbbb2" [label="CONTAINS", color="#475569", style="solid"];
+  "Operation:bbbbbbbbbbbbbbb1" -> "Operation:bbbbbbbbbbbbbbb2" [label="PARENT_OF", color="#64748b", style="dashed"];
+}

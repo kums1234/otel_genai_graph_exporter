@@ -1,0 +1,92 @@
+{
+  "name": "example_real_gemini_chat",
+  "description": "Real Gemini 2.5 Flash chat captured via tests/capture_real_traces.py (--provider google). Conversation id and timestamps sanitised; token counts and response preview are authentic.",
+  "otlp": {
+    "resourceSpans": [
+      {
+        "resource": {
+          "attributes": [
+            {
+              "key": "service.name",
+              "value": {
+                "stringValue": "real-capture"
+              }
+            }
+          ]
+        },
+        "scopeSpans": [
+          {
+            "scope": {
+              "name": "capture_real_traces",
+              "version": "0.1.0"
+            },
+            "spans": [
+              {
+                "traceId": "68f6766d5e814763afa57a34004c58f62ccf981e0dd9450e",
+                "spanId": "5b9440d1e70645dc",
+                "parentSpanId": "",
+                "name": "chat gemini-2.5-flash",
+                "kind": 3,
+                "startTimeUnixNano": "1776723446572029000",
+                "endTimeUnixNano": "1776723449374399000",
+                "attributes": [
+                  {
+                    "key": "gen_ai.operation.name",
+                    "value": {
+                      "stringValue": "chat"
+                    }
+                  },
+                  {
+                    "key": "gen_ai.provider.name",
+                    "value": {
+                      "stringValue": "gcp.gen_ai"
+                    }
+                  },
+                  {
+                    "key": "gen_ai.request.model",
+                    "value": {
+                      "stringValue": "gemini-2.5-flash"
+                    }
+                  },
+                  {
+                    "key": "gen_ai.response.model",
+                    "value": {
+                      "stringValue": "gemini-2.5-flash"
+                    }
+                  },
+                  {
+                    "key": "gen_ai.conversation.id",
+                    "value": {
+                      "stringValue": "example-conv-gemini-1"
+                    }
+                  },
+                  {
+                    "key": "gen_ai.usage.input_tokens",
+                    "value": {
+                      "intValue": "8"
+                    }
+                  },
+                  {
+                    "key": "gen_ai.usage.output_tokens",
+                    "value": {
+                      "intValue": "136"
+                    }
+                  }
+                ],
+                "status": {
+                  "code": 1
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "captured": {
+    "cost_usd": 8.28e-05,
+    "input_tokens": 8,
+    "output_tokens": 136,
+    "response_preview": "Quicksort selects a \"pivot\" element from the array and partitions the other elements into two sub-arrays according to whether they are less than or greater than the pivot. It then recursively applies "
+  }
+}

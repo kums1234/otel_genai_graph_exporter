@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 520" font-family="-apple-system, system-ui, Segoe UI, Roboto, sans-serif">
+  <title>otel-genai-graph — multi_agent fixture rendered</title>
+  <desc>A Session contains three Operations. An orchestrator Agent invokes the root op and delegates to a specialist Agent, which invokes a nested op that executes against a Model. Generated from tests/fixtures/multi_agent.json.</desc>
+
+  <!-- legend box (top-right) -->
+  <g font-size="11" fill="#475569">
+    <rect x="700" y="20" width="200" height="116" rx="6" fill="#f8fafc" stroke="#cbd5e1"/>
+    <text x="712" y="40" font-weight="600" fill="#0f172a">Node labels</text>
+    <circle cx="720" cy="58" r="6" fill="#6366f1"/><text x="734" y="62">Session</text>
+    <circle cx="720" cy="76" r="6" fill="#10b981"/><text x="734" y="80">Agent</text>
+    <circle cx="720" cy="94" r="6" fill="#0ea5e9"/><text x="734" y="98">Operation</text>
+    <circle cx="720" cy="112" r="6" fill="#f59e0b"/><text x="734" y="116">Model</text>
+    <circle cx="720" cy="130" r="6" fill="#94a3b8"/><text x="734" y="134">(Tool / DataSource)</text>
+  </g>
+
+  <!-- arrow marker defs -->
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#64748b"/>
+    </marker>
+    <marker id="arrow-emph" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#9333ea"/>
+    </marker>
+  </defs>
+
+  <!-- ─────────── Edges (drawn first so nodes sit on top) ─────────── -->
+
+  <!-- CONTAINS: Session → Operation × 3 -->
+  <g stroke="#64748b" stroke-width="1.5" fill="none" marker-end="url(#arrow)">
+    <path d="M 180 110 Q 220 160, 290 195"/>
+    <path d="M 180 110 Q 260 190, 290 305"/>
+    <path d="M 180 110 Q 260 260, 290 415"/>
+  </g>
+
+  <!-- INVOKED: Agent(orchestrator) → Op1, Agent(specialist) → Op2 -->
+  <g stroke="#64748b" stroke-width="1.5" fill="none" marker-end="url(#arrow)">
+    <path d="M 140 230 L 280 225"/>
+    <path d="M 140 340 L 280 335"/>
+  </g>
+
+  <!-- PARENT_OF: Op1 → Op2, Op2 → Op3 -->
+  <g stroke="#64748b" stroke-width="1.5" fill="none" marker-end="url(#arrow)" stroke-dasharray="4 3">
+    <path d="M 370 235 L 370 295"/>
+    <path d="M 370 345 L 370 405"/>
+  </g>
+
+  <!-- EXECUTED: Op3 → Model -->
+  <g stroke="#64748b" stroke-width="1.5" fill="none" marker-end="url(#arrow)">
+    <path d="M 445 425 L 580 345"/>
+  </g>
+
+  <!-- DELEGATED_TO: orchestrator → specialist -->
+  <g stroke="#9333ea" stroke-width="2" fill="none" marker-end="url(#arrow-emph)">
+    <path d="M 85 245 Q 35 290, 85 330"/>
+  </g>
+
+  <!-- Edge labels -->
+  <g font-size="10" fill="#475569">
+    <text x="200" y="140">CONTAINS</text>
+    <text x="170" y="218">INVOKED</text>
+    <text x="170" y="328">INVOKED</text>
+    <text x="375" y="268">PARENT_OF</text>
+    <text x="375" y="378">PARENT_OF</text>
+    <text x="500" y="395">EXECUTED</text>
+    <text x="10" y="294" fill="#7c3aed" font-weight="600">DELEGATED_TO</text>
+  </g>
+
+  <!-- ─────────── Nodes ─────────── -->
+
+  <!-- Session -->
+  <g>
+    <rect x="110" y="80" width="140" height="50" rx="25" fill="#eef2ff" stroke="#6366f1" stroke-width="2"/>
+    <text x="180" y="104" text-anchor="middle" font-size="13" font-weight="600" fill="#1e1b4b">Session</text>
+    <text x="180" y="120" text-anchor="middle" font-size="10" fill="#475569">conv-3</text>
+  </g>
+
+  <!-- Agent: orchestrator -->
+  <g>
+    <rect x="20" y="205" width="120" height="50" rx="12" fill="#ecfdf5" stroke="#10b981" stroke-width="2"/>
+    <text x="80" y="229" text-anchor="middle" font-size="13" font-weight="600" fill="#064e3b">Agent</text>
+    <text x="80" y="245" text-anchor="middle" font-size="10" fill="#475569">orchestrator</text>
+  </g>
+
+  <!-- Agent: specialist -->
+  <g>
+    <rect x="20" y="315" width="120" height="50" rx="12" fill="#ecfdf5" stroke="#10b981" stroke-width="2"/>
+    <text x="80" y="339" text-anchor="middle" font-size="13" font-weight="600" fill="#064e3b">Agent</text>
+    <text x="80" y="355" text-anchor="middle" font-size="10" fill="#475569">specialist</text>
+  </g>
+
+  <!-- Operation 1: invoke_agent orch -->
+  <g>
+    <rect x="280" y="200" width="180" height="50" rx="6" fill="#f0f9ff" stroke="#0ea5e9" stroke-width="2"/>
+    <text x="370" y="222" text-anchor="middle" font-size="12" font-weight="600" fill="#0c4a6e">Operation · invoke_agent</text>
+    <text x="370" y="238" text-anchor="middle" font-size="10" fill="#475569">span-1</text>
+  </g>
+
+  <!-- Operation 2: invoke_agent spec -->
+  <g>
+    <rect x="280" y="310" width="180" height="50" rx="6" fill="#f0f9ff" stroke="#0ea5e9" stroke-width="2"/>
+    <text x="370" y="332" text-anchor="middle" font-size="12" font-weight="600" fill="#0c4a6e">Operation · invoke_agent</text>
+    <text x="370" y="348" text-anchor="middle" font-size="10" fill="#475569">span-2</text>
+  </g>
+
+  <!-- Operation 3: chat -->
+  <g>
+    <rect x="280" y="420" width="180" height="50" rx="6" fill="#f0f9ff" stroke="#0ea5e9" stroke-width="2"/>
+    <text x="370" y="442" text-anchor="middle" font-size="12" font-weight="600" fill="#0c4a6e">Operation · chat</text>
+    <text x="370" y="458" text-anchor="middle" font-size="10" fill="#475569">span-3</text>
+  </g>
+
+  <!-- Model -->
+  <g>
+    <rect x="580" y="310" width="200" height="50" rx="6" fill="#fffbeb" stroke="#f59e0b" stroke-width="2"/>
+    <text x="680" y="332" text-anchor="middle" font-size="13" font-weight="600" fill="#78350f">Model</text>
+    <text x="680" y="348" text-anchor="middle" font-size="10" fill="#475569">anthropic/claude-opus-4-7</text>
+  </g>
+
+  <!-- Caption -->
+  <text x="460" y="500" text-anchor="middle" font-size="11" fill="#64748b" font-style="italic">
+    Rendered from tests/fixtures/multi_agent.json — 7 nodes, 9 edges.
+  </text>
+</svg>

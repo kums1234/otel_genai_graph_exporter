@@ -1,0 +1,39 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+build/
+dist/
+.venv/
+venv/
+env/
+
+# Test / lint caches
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.tox/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Local env
+.env
+.env.local
+
+# Local artifacts (real trace dumps, captured OTLP, experiments)
+dumps/
+*.otlp.json
+
+# Real-API capture output — contains live response text + user-specific
+# deployment identifiers. Seed a sanitised copy under examples/ for demos.
+tests/fixtures/real/

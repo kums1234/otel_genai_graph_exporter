@@ -1,0 +1,130 @@
+{
+  "name": "instrumentor_google-genai_instr-1776723461-c11c14-0",
+  "description": "captured by opentelemetry-instrumentation-google-genai==0.7b0 calling gcp.gen_ai/gemini-2.5-flash",
+  "otlp": {
+    "resourceSpans": [
+      {
+        "resource": {
+          "attributes": [
+            {
+              "key": "service.name",
+              "value": {
+                "stringValue": "instrumentor-capture"
+              }
+            },
+            {
+              "key": "telemetry.sdk.language",
+              "value": {
+                "stringValue": "python"
+              }
+            },
+            {
+              "key": "telemetry.sdk.name",
+              "value": {
+                "stringValue": "opentelemetry"
+              }
+            },
+            {
+              "key": "telemetry.sdk.version",
+              "value": {
+                "stringValue": "1.41.0"
+              }
+            }
+          ]
+        },
+        "scopeSpans": [
+          {
+            "scope": {
+              "name": "opentelemetry.instrumentation.google_genai",
+              "version": "0.7b0"
+            },
+            "spans": [
+              {
+                "traceId": "19debfdbaddc067ade9fb9ff67ab09c4",
+                "spanId": "eee49a65f56afc00",
+                "parentSpanId": "",
+                "name": "generate_content gemini-2.5-flash",
+                "kind": 0,
+                "startTimeUnixNano": "1776723461599801000",
+                "endTimeUnixNano": "1776723463627727000",
+                "attributes": [
+                  {
+                    "key": "code.function.name",
+                    "value": {
+                      "stringValue": "google.genai.Models.generate_content"
+                    }
+                  },
+                  {
+                    "key": "gen_ai.request.model",
+                    "value": {
+                      "stringValue": "gemini-2.5-flash"
+                    }
+                  },
+                  {
+                    "key": "gen_ai.operation.name",
+                    "value": {
+                      "stringValue": "generate_content"
+                    }
+                  },
+                  {
+                    "key": "gen_ai.system",
+                    "value": {
+                      "stringValue": "gemini"
+                    }
+                  },
+                  {
+                    "key": "gen_ai.usage.input_tokens",
+                    "value": {
+                      "intValue": "8"
+                    }
+                  },
+                  {
+                    "key": "gen_ai.usage.output_tokens",
+                    "value": {
+                      "intValue": "51"
+                    }
+                  },
+                  {
+                    "key": "gen_ai.response.finish_reasons",
+                    "value": {
+                      "arrayValue": {
+                        "values": [
+                          {
+                            "stringValue": "stop"
+                          }
+                        ]
+                      }
+                    }
+                  }
+                ],
+                "status": {
+                  "code": 0
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "captured": {
+    "cost_usd": 6.24e-05,
+    "input_tokens": 8,
+    "output_tokens": 102,
+    "response_preview": "Quicksort selects a pivot element from the array and partitions the other elements into two sub-arrays, according to whether they are less than or greater than the pivot. The process then recursively ",
+    "span_count": 1
+  },
+  "provenance": {
+    "instrumentor": {
+      "name": "opentelemetry-instrumentation-google-genai",
+      "version": "0.7b0",
+      "source_repo": "open-telemetry/opentelemetry-python-contrib",
+      "license": "Apache-2.0"
+    },
+    "api_provider": "google",
+    "semconv_provider": "gcp.gen_ai",
+    "api_model_or_deployment": "gemini-2.5-flash",
+    "cost_model": "gemini-2.5-flash",
+    "captured_at_unix_ns": 1776723463629880000
+  }
+}

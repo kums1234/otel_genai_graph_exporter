@@ -1,0 +1,82 @@
+{
+  "name": "error_case",
+  "description": "Agent invokes a tool that fails. status.code=ERROR on the tool span must propagate to its agent ancestor.",
+  "otlp": {
+    "resourceSpans": [
+      {
+        "resource": {
+          "attributes": [
+            {"key": "service.name", "value": {"stringValue": "ops-agent"}}
+          ]
+        },
+        "scopeSpans": [
+          {
+            "scope": {"name": "opentelemetry.instrumentation.langgraph", "version": "0.2.0"},
+            "spans": [
+              {
+                "traceId": "44444444444444444444444444444444",
+                "spanId": "ddddddddddddddd1",
+                "parentSpanId": "",
+                "name": "invoke_agent ops-agent",
+                "kind": 1,
+                "startTimeUnixNano": "1737000400000000000",
+                "endTimeUnixNano": "1737000402500000000",
+                "attributes": [
+                  {"key": "gen_ai.operation.name",  "value": {"stringValue": "invoke_agent"}},
+                  {"key": "gen_ai.agent.id",        "value": {"stringValue": "agent-err"}},
+                  {"key": "gen_ai.agent.name",      "value": {"stringValue": "ops-agent"}},
+                  {"key": "gen_ai.conversation.id", "value": {"stringValue": "conv-5"}}
+                ],
+                "status": {"code": 1}
+              },
+              {
+                "traceId": "44444444444444444444444444444444",
+                "spanId": "ddddddddddddddd2",
+                "parentSpanId": "ddddddddddddddd1",
+                "name": "execute_tool db_query",
+                "kind": 1,
+                "startTimeUnixNano": "1737000400500000000",
+                "endTimeUnixNano": "1737000402400000000",
+                "attributes": [
+                  {"key": "gen_ai.operation.name",  "value": {"stringValue": "execute_tool"}},
+                  {"key": "gen_ai.tool.name",       "value": {"stringValue": "db_query"}},
+                  {"key": "gen_ai.conversation.id", "value": {"stringValue": "conv-5"}},
+                  {"key": "gen_ai.agent.id",        "value": {"stringValue": "agent-err"}},
+                  {"key": "error.type",             "value": {"stringValue": "TimeoutError"}}
+                ],
+                "status": {"code": 2, "message": "database timeout after 2000ms"},
+                "events": [
+                  {
+                    "timeUnixNano": "1737000402400000000",
+                    "name": "exception",
+                    "attributes": [
+                      {"key": "exception.type",    "value": {"stringValue": "TimeoutError"}},
+                      {"key": "exception.message", "value": {"stringValue": "database timeout after 2000ms"}}
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "expected_graph": {
+    "nodes": {
+      "Session":   1,
+      "Agent":     1,
+      "Tool":      1,
+      "Operation": 2
+    },
+    "edges": {
+      "CONTAINS":  2,
+      "INVOKED":   1,
+      "CALLED":    1,
+      "PARENT_OF": 1
+    },
+    "total_nodes": 5,
+    "total_edges": 5,
+    "error_ops": ["ddddddddddddddd1", "ddddddddddddddd2"]
+  }
+}

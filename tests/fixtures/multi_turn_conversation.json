@@ -1,0 +1,120 @@
+{
+  "name": "multi_turn_conversation",
+  "description": "Three chat turns across three distinct trace_ids sharing one conversation.id. The Session node must merge to one.",
+  "otlp": {
+    "resourceSpans": [
+      {
+        "resource": {
+          "attributes": [
+            {"key": "service.name", "value": {"stringValue": "chat-app"}}
+          ]
+        },
+        "scopeSpans": [
+          {
+            "scope": {"name": "opentelemetry.instrumentation.anthropic", "version": "0.40.0"},
+            "spans": [
+              {
+                "traceId": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa1",
+                "spanId": "eeeeeeeeeeeeeee1",
+                "parentSpanId": "",
+                "name": "chat claude-sonnet-4-5",
+                "kind": 3,
+                "startTimeUnixNano": "1737000500000000000",
+                "endTimeUnixNano": "1737000500600000000",
+                "attributes": [
+                  {"key": "gen_ai.operation.name",      "value": {"stringValue": "chat"}},
+                  {"key": "gen_ai.provider.name",       "value": {"stringValue": "anthropic"}},
+                  {"key": "gen_ai.request.model",       "value": {"stringValue": "claude-sonnet-4-5"}},
+                  {"key": "gen_ai.response.model",      "value": {"stringValue": "claude-sonnet-4-5"}},
+                  {"key": "gen_ai.conversation.id",     "value": {"stringValue": "conv-multi"}},
+                  {"key": "gen_ai.usage.input_tokens",  "value": {"intValue": "50"}},
+                  {"key": "gen_ai.usage.output_tokens", "value": {"intValue": "40"}}
+                ],
+                "status": {"code": 1}
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "resource": {
+          "attributes": [
+            {"key": "service.name", "value": {"stringValue": "chat-app"}}
+          ]
+        },
+        "scopeSpans": [
+          {
+            "scope": {"name": "opentelemetry.instrumentation.anthropic", "version": "0.40.0"},
+            "spans": [
+              {
+                "traceId": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb2",
+                "spanId": "eeeeeeeeeeeeeee2",
+                "parentSpanId": "",
+                "name": "chat claude-sonnet-4-5",
+                "kind": 3,
+                "startTimeUnixNano": "1737000560000000000",
+                "endTimeUnixNano": "1737000560700000000",
+                "attributes": [
+                  {"key": "gen_ai.operation.name",      "value": {"stringValue": "chat"}},
+                  {"key": "gen_ai.provider.name",       "value": {"stringValue": "anthropic"}},
+                  {"key": "gen_ai.request.model",       "value": {"stringValue": "claude-sonnet-4-5"}},
+                  {"key": "gen_ai.response.model",      "value": {"stringValue": "claude-sonnet-4-5"}},
+                  {"key": "gen_ai.conversation.id",     "value": {"stringValue": "conv-multi"}},
+                  {"key": "gen_ai.usage.input_tokens",  "value": {"intValue": "110"}},
+                  {"key": "gen_ai.usage.output_tokens", "value": {"intValue": "90"}}
+                ],
+                "status": {"code": 1}
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "resource": {
+          "attributes": [
+            {"key": "service.name", "value": {"stringValue": "chat-app"}}
+          ]
+        },
+        "scopeSpans": [
+          {
+            "scope": {"name": "opentelemetry.instrumentation.anthropic", "version": "0.40.0"},
+            "spans": [
+              {
+                "traceId": "ccccccccccccccccccccccccccccccc3",
+                "spanId": "eeeeeeeeeeeeeee3",
+                "parentSpanId": "",
+                "name": "chat claude-sonnet-4-5",
+                "kind": 3,
+                "startTimeUnixNano": "1737000620000000000",
+                "endTimeUnixNano": "1737000620900000000",
+                "attributes": [
+                  {"key": "gen_ai.operation.name",      "value": {"stringValue": "chat"}},
+                  {"key": "gen_ai.provider.name",       "value": {"stringValue": "anthropic"}},
+                  {"key": "gen_ai.request.model",       "value": {"stringValue": "claude-sonnet-4-5"}},
+                  {"key": "gen_ai.response.model",      "value": {"stringValue": "claude-sonnet-4-5"}},
+                  {"key": "gen_ai.conversation.id",     "value": {"stringValue": "conv-multi"}},
+                  {"key": "gen_ai.usage.input_tokens",  "value": {"intValue": "180"}},
+                  {"key": "gen_ai.usage.output_tokens", "value": {"intValue": "150"}}
+                ],
+                "status": {"code": 1}
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "expected_graph": {
+    "nodes": {
+      "Session":   1,
+      "Model":     1,
+      "Operation": 3
+    },
+    "edges": {
+      "CONTAINS": 3,
+      "EXECUTED": 3
+    },
+    "total_nodes": 5,
+    "total_edges": 6
+  }
+}
