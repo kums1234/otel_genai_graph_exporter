@@ -3,8 +3,8 @@
 **Turn OpenTelemetry GenAI spans into a queryable Neo4j graph.**
 
 Linear LLM tracers show you one agent's timeline. This exporter maps the
-same spans to a graph — conversations, agents, LLM calls, tools, data
-sources, with typed relationships between them — so you can ask
+same spans to a graph, conversations, agents, LLM calls, tools, data
+sources, with typed relationships between them, so you can ask
 *structural* questions: who delegated to whom, what did this agent cost
 across its sub-agents, which data sources did a session hit, what broke
 when that tool failed.
@@ -14,7 +14,7 @@ classic / v1 / Foundry, Ollama, Groq, anything OpenAI-SDK-compatible) and
 ingests both OpenTelemetry GenAI **semantic conventions v1.37** canonical
 emitters and the pre-v1.37 shapes that most instrumentors still ship
 today (Google `gen_ai.system`, Arize OpenInference `session.id`,
-LangSmith, Traceloop's association bag — all handled with precedence
+LangSmith, Traceloop's association bag, all handled with precedence
 tables documented in [`docs/mapping.md`](docs/mapping.md)).
 
 ![Multi-agent delegation, rendered from the `multi_agent` fixture](docs/images/multi-agent-graph.svg)
@@ -24,9 +24,9 @@ tables documented in [`docs/mapping.md`](docs/mapping.md)).
 - **Ingest** OTLP/JSON `resourceSpans` from any GenAI-instrumented app.
 - **Map** to a typed graph: `Session` → `Operation` → `Model`/`Tool`/`DataSource`, `Agent` ─`INVOKED`→ `Operation`, `Agent` ─`DELEGATED_TO`→ `Agent`.
 - **Write idempotently** to Neo4j via `MERGE` on natural keys. Re-ingesting the same trace is a no-op.
-- **Stream live or load files** — ships a `SpanExporter` (plug into any `TracerProvider`) and a file loader (`python -m otel_genai_graph.load trace.json ...`).
-- **Canonicalise legacy attributes** — `gen_ai.system → gen_ai.provider.name`, `generate_content → chat`, plus a priority-ordered `conversation.id` fallback list (`session.id`, `langsmith.trace.session_id`, `traceloop.association.properties.*`). Spec-conformant emitters still win; everything else gets pulled into the same graph coordinate system.
-- **Enforce shape-independent invariants** — 7 structural checks that run against every fixture: edge endpoint types, Session uniqueness, DAG property of parent/delegation edges, orphan secondaries, token-count and time-ordering sanity.
+- **Stream live or load files**, ships a `SpanExporter` (plug into any `TracerProvider`) and a file loader (`python -m otel_genai_graph.load trace.json ...`).
+- **Canonicalise legacy attributes**, `gen_ai.system → gen_ai.provider.name`, `generate_content → chat`, plus a priority-ordered `conversation.id` fallback list (`session.id`, `langsmith.trace.session_id`, `traceloop.association.properties.*`). Spec-conformant emitters still win; everything else gets pulled into the same graph coordinate system.
+- **Enforce shape-independent invariants**, 7 structural checks that run against every fixture: edge endpoint types, Session uniqueness, DAG property of parent/delegation edges, orphan secondaries, token-count and time-ordering sanity.
 
 ## 60-second quickstart
 
@@ -83,7 +83,7 @@ RETURN m.provider, m.name,
        sum(o.output_tokens)      AS out_tok
 ORDER BY calls DESC
 
-// blast radius — which agents/sessions did a failing tool touch?
+// blast radius, which agents/sessions did a failing tool touch?
 MATCH (t:Tool)<-[:CALLED]-(op:Operation {status:"ERROR"})
       <-[:PARENT_OF*]-(ancestor:Operation)
       <-[:CONTAINS]-(s:Session)
@@ -101,10 +101,10 @@ ORDER BY in_tok + out_tok DESC
 
 Four independent data sources catch different bug classes:
 
-1. **Hand-written fixtures** — 6 canonical cases in `tests/fixtures/*.json`. Each ships an `expected_graph` block with hand-counted node/edge totals; the mapper has to match exactly.
-2. **Parametric synthesizer** — [`tests/generate_traces.py`](tests/generate_traces.py) emits thousands of deterministic OTLP traces across five shapes (`simple`, `agent_tool`, `multi_agent`, `rag`, `multi_turn`) with a **chaos mode** that introduces dropped attributes, orphaned children, reordered spans, and corrupted trace_ids. The mapper must stay correct on clean traces and must not crash on chaos.
-3. **Real-SDK capture** — [`tests/capture_real_traces.py`](tests/capture_real_traces.py) calls actual LLMs (Anthropic, OpenAI, Gemini, Azure OpenAI classic / v1 / Foundry, Ollama) with a `BudgetGuard` that refuses to run past a cap. Five shapes: `chat`, `agent_tool`, `embeddings`, `multi_turn`, `tool_call` (with real tool execution).
-4. **Upstream-instrumentor capture** — [`tests/capture_with_instrumentor.py`](tests/capture_with_instrumentor.py) runs spans through Python Contrib's own `OpenAIInstrumentor` / `GoogleGenAiSdkInstrumentor` and dumps what they emit. This is how we found that the Google instrumentor emits the pre-v1.37 `gen_ai.system="gemini"` + `operation.name="generate_content"` shape — now handled by the mapper's legacy-compat table.
+1. **Hand-written fixtures**, 6 canonical cases in `tests/fixtures/*.json`. Each ships an `expected_graph` block with hand-counted node/edge totals; the mapper has to match exactly.
+2. **Parametric synthesizer**, [`tests/generate_traces.py`](tests/generate_traces.py) emits thousands of deterministic OTLP traces across five shapes (`simple`, `agent_tool`, `multi_agent`, `rag`, `multi_turn`) with a **chaos mode** that introduces dropped attributes, orphaned children, reordered spans, and corrupted trace_ids. The mapper must stay correct on clean traces and must not crash on chaos.
+3. **Real-SDK capture**, [`tests/capture_real_traces.py`](tests/capture_real_traces.py) calls actual LLMs (Anthropic, OpenAI, Gemini, Azure OpenAI classic / v1 / Foundry, Ollama) with a `BudgetGuard` that refuses to run past a cap. Five shapes: `chat`, `agent_tool`, `embeddings`, `multi_turn`, `tool_call` (with real tool execution).
+4. **Upstream-instrumentor capture**, [`tests/capture_with_instrumentor.py`](tests/capture_with_instrumentor.py) runs spans through Python Contrib's own `OpenAIInstrumentor` / `GoogleGenAiSdkInstrumentor` and dumps what they emit. This is how we found that the Google instrumentor emits the pre-v1.37 `gen_ai.system="gemini"` + `operation.name="generate_content"` shape, now handled by the mapper's legacy-compat table.
 
 All four feed into a **shape-independent invariant test suite** that checks 7 structural properties across every captured graph. See [`docs/mapping.md`](docs/mapping.md) for the full contract and [`tests/test_invariants.py`](tests/test_invariants.py) for the enforcement.
 
@@ -147,14 +147,14 @@ See [`tests/live_export_demo.py`](tests/live_export_demo.py) for a runnable walk
 
 ## Status
 
-**v0.1 — reference implementation, 793 tests passing.**
+**v0.1, reference implementation, 793 tests passing.**
 All components live: schema, mapper (with legacy-compat canonicalisation), Neo4j sink (MERGE-based, idempotent), SpanExporter, file loader, cost table, synthesizer, real-API capture, upstream-instrumentor capture, invariants.
 
-Known open questions — tracked in [`docs/schema.md`](docs/schema.md#open-questions-v02-candidates):
+Known open questions, tracked in [`docs/schema.md`](docs/schema.md#open-questions-v02-candidates):
 
 - `Resource` nodes aren't currently emitted (schema has the label; mapper skips it to keep v0.1 simple).
 - Streaming spans (partial output): we take the final span only.
-- Cost attribution lives as `Operation` properties, not a dedicated `Budget` node — deferred until a concrete UX asks for it.
+- Cost attribution lives as `Operation` properties, not a dedicated `Budget` node, deferred until a concrete UX asks for it.
 
 ## Contributing
 
