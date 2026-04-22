@@ -10,8 +10,15 @@ validation pipeline tight. A few conventions make that possible.
 git clone <repo-url> && cd otel-genai-graph
 python3 -m venv .venv && . .venv/bin/activate
 pip install -e ".[dev]"
+cp .env.example .env         # uncomment NEO4J_URI + any API keys you use
 pytest                       # unit + mapper + synth + invariants + legacy-compat
 ```
+
+Every CLI auto-loads `.env` via `otel_genai_graph._env.load_env()`. Shell
+env vars always win (`override=False`), so CI overrides are never
+shadowed by a committed or stale `.env`. If `python-dotenv` isn't
+installed the loader is a silent no-op and you fall back to explicit
+exports.
 
 Integration tests against a live Neo4j auto-skip when `NEO4J_URI` is
 unset. To run them:

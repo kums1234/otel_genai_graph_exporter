@@ -45,6 +45,7 @@ from typing import Optional
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
+from otel_genai_graph._env import load_env  # noqa: E402
 from otel_genai_graph.export import (  # noqa: E402
     neo4j_result_to_graph,
     neo4j_result_to_table,
@@ -288,6 +289,7 @@ def _parse_params(items: Optional[list[str]]) -> dict[str, str]:
 
 
 def main(argv: Optional[list[str]] = None) -> int:
+    load_env()  # fills env from ./.env if present; shell wins
     p = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
     )

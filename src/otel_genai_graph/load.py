@@ -21,6 +21,7 @@ import sys
 from pathlib import Path
 from typing import Optional
 
+from ._env import load_env
 from .mapper import map_spans
 from .neo4j_sink import Neo4jSink
 
@@ -35,6 +36,7 @@ def _load_resource_spans(path: Path) -> list[dict]:
 
 
 def main(argv: Optional[list[str]] = None) -> int:
+    load_env()  # fills env from ./.env if present; shell wins
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     p.add_argument("files", nargs="+", type=Path, help="one or more OTLP/JSON fixture files")
     p.add_argument("--uri",      default=os.environ.get("NEO4J_URI",      "bolt://localhost:7687"))

@@ -25,6 +25,7 @@ dependencies = [
     "opentelemetry-api>=1.27",
     "opentelemetry-sdk>=1.27",
     "neo4j>=5.20",
+    "python-dotenv>=1.0",
 ]
 
 [project.optional-dependencies]

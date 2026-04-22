@@ -41,11 +41,37 @@ pytest                                    # 833 unit/integration tests
 docker run -d --name otel-neo4j \
     -p 17474:7474 -p 17687:7687 \
     -e NEO4J_AUTH=neo4j/testtest neo4j:5
-export NEO4J_URI=bolt://localhost:17687 NEO4J_USER=neo4j NEO4J_PASSWORD=testtest
+
+# configure connection + API keys once — shell env vars always win
+cp .env.example .env          # then uncomment / fill in what you need
+
 python -m otel_genai_graph.load tests/fixtures/*.json
 # explore — no Cypher required:
 python tools/render_graph.py --from-neo4j --query overview \
     --output /tmp/overview --format html && open /tmp/overview.html
+```
+
+### Configuration
+
+Every CLI (loader, `tools/render_graph.py`, capture scripts) reads its
+settings from environment variables. Copy `.env.example` → `.env` at the
+project root, uncomment the blocks you need, and they get auto-loaded.
+
+- Works from any working directory — the loader walks up to find `.env`.
+- **Shell env always wins** (`override=False`). CI / container env vars
+  can't be shadowed by a committed or stale `.env`.
+- Soft dep: `python-dotenv` is in `dependencies`; if it's ever missing
+  (minimal container), `load_env()` silently no-ops and you fall back to
+  explicit exports.
+- `.env` is gitignored (`.env`, `.env.local`); only `.env.example` is
+  committed.
+
+Minimum viable `.env` for the quickstart:
+
+```bash
+NEO4J_URI=bolt://localhost:17687
+NEO4J_USER=neo4j
+NEO4J_PASSWORD=testtest
 ```
 
 ## Explore without Cypher

@@ -53,7 +53,11 @@ Usage
   export OPENAI_BASE_URL=http://localhost:11434/v1/
   export OPENAI_API_KEY=ollama      # any non-empty value; ignored
   # Local models can be slow — bump the SDK read timeout if needed:
-  export OPENAI_TIMEOUT_SECONDS=300  # default 300; raise for bigger models
+  export OPENAI_TIMEOUT_SECONDS=600  # default 300; raise for bigger models
+  # And cap output length — the single biggest latency win for local
+  # models. Without it, a 7B model will cheerfully generate 4 k tokens
+  # for a "hello" prompt.
+  export OPENAI_MAX_OUTPUT_TOKENS=256
   python tests/capture_real_traces.py \\
       --provider openai --model qwen2.5:7b \\
       --shape tool_call --ignore-unknown-pricing \\
@@ -126,6 +130,7 @@ from typing import Any, Callable, Optional
 # We import cost lazily from the installed package path so this script also
 # runs when the package isn't pip-installed yet.
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
+from otel_genai_graph._env import load_env  # noqa: E402
 from otel_genai_graph.cost import compute_cost  # noqa: E402
 
 
@@ -215,6 +220,7 @@ def _call_openai(model: str, prompt: str) -> tuple[str, int, int]:
     resp = client.chat.completions.create(
         model=model,
         messages=[{"role": "user", "content": prompt}],
+        **_chat_create_kwargs(),
     )
     text = resp.choices[0].message.content or ""
     return text, resp.usage.prompt_tokens, resp.usage.completion_tokens
@@ -297,6 +303,7 @@ def _call_azure_openai(deployment: str, prompt: str) -> tuple[str, int, int]:
     resp = client.chat.completions.create(
         model=deployment,  # for Azure, the "model" argument is the deployment name
         messages=[{"role": "user", "content": prompt}],
+        **_chat_create_kwargs(),
     )
     text = resp.choices[0].message.content or ""
     return text, resp.usage.prompt_tokens, resp.usage.completion_tokens
@@ -348,6 +355,7 @@ def _call_azure_openai_v1(deployment: str, prompt: str) -> tuple[str, int, int]:
     resp = client.chat.completions.create(
         model=deployment,
         messages=[{"role": "user", "content": prompt}],
+        **_chat_create_kwargs(),
     )
     text = resp.choices[0].message.content or ""
     return text, resp.usage.prompt_tokens, resp.usage.completion_tokens
@@ -425,6 +433,32 @@ def _openai_timeout_seconds() -> float:
         return float(raw)
     except ValueError:
         return 300.0
+
+
+def _openai_max_output_tokens() -> Optional[int]:
+    """Read OPENAI_MAX_OUTPUT_TOKENS; default None (unbounded).
+
+    Local models (Ollama) will happily generate thousands of tokens for a
+    "Hello" prompt — setting this to 128 / 256 is the difference between
+    a 2-second request and a 10-minute one.
+    """
+    raw = os.environ.get("OPENAI_MAX_OUTPUT_TOKENS", "").strip()
+    if not raw:
+        return None
+    try:
+        n = int(raw)
+        return n if n > 0 else None
+    except ValueError:
+        return None
+
+
+def _chat_create_kwargs() -> dict[str, Any]:
+    """Kwargs for client.chat.completions.create() — currently just max_tokens."""
+    kw: dict[str, Any] = {}
+    cap = _openai_max_output_tokens()
+    if cap is not None:
+        kw["max_tokens"] = cap
+    return kw
 
 
 def _openai_client_for(provider_id: str):
@@ -506,6 +540,7 @@ def _call_openai_with_tools(
         messages=messages,
         tools=TOOL_DEFINITIONS,
         tool_choice="auto",
+        **_chat_create_kwargs(),
     )
     usage = resp.usage
     return resp, int(usage.prompt_tokens or 0), int(usage.completion_tokens or 0)
@@ -1047,6 +1082,7 @@ def load_prompts(args: argparse.Namespace) -> list[str]:
 
 
 def main(argv: Optional[list[str]] = None) -> int:
+    load_env()  # fills env from ./.env if present; shell wins
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     p.add_argument("--provider", choices=sorted(PROVIDERS), default="anthropic",
                    help="anthropic, openai, azure_openai, azure_inference")

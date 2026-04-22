@@ -74,6 +74,7 @@ from capture_real_traces import (  # type: ignore[import-not-found]
     BudgetExceeded,
 )
 
+from otel_genai_graph._env import load_env
 from otel_genai_graph.exporter import group_spans_to_resource_spans
 
 from opentelemetry import trace
@@ -172,6 +173,7 @@ def load_prompts(args: argparse.Namespace) -> list[str]:
 
 
 def main(argv: Optional[list[str]] = None) -> int:
+    load_env()  # fills env from ./.env if present; shell wins
     p = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
     )
