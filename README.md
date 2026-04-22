@@ -5,6 +5,8 @@
 > session structure — one command each, zero Cypher, mixed vendors, real
 > tokens.
 
+![Demo — running the cost_by_model saved query](docs/images/demo.svg)
+
 ![Multi-agent delegation, rendered from the `multi_agent` fixture](docs/images/multi-agent-graph.svg)
 
 ## See it in one command
@@ -335,6 +337,14 @@ Known open questions, tracked in [`docs/schema.md`](docs/schema.md#open-question
 ## Contributing
 
 See [`CONTRIBUTING.md`](CONTRIBUTING.md) for the dev loop, adding fixtures, adding provider adapters, and the invariant contract.
+
+## Contributors
+
+Maintained by [@kums1234](https://github.com/kums1234). Any non-trivial
+contribution — code, docs, bug report, test fixture, real-trace capture,
+provider adapter, design feedback — earns a row in
+[`CONTRIBUTORS.md`](CONTRIBUTORS.md). Instructions for getting listed
+are in that file.
 
 ## License
 

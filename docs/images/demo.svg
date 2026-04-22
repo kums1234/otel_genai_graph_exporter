@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 420" font-family="ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', monospace">
+  <title>otel-genai-graph demo — cost_by_model saved query</title>
+  <desc>Animated SVG demo: invokes render_graph.py against a live Neo4j and shows the cost_by_model table materialise across synthetic and real captures. Loops.</desc>
+
+  <!-- Terminal window -->
+  <g>
+    <rect x="10" y="10" width="740" height="400" rx="10" fill="#0f172a" stroke="#334155" stroke-width="1"/>
+    <rect x="10" y="10" width="740" height="30" rx="10" fill="#1e293b"/>
+    <rect x="10" y="30" width="740" height="10" fill="#1e293b"/>
+    <circle cx="30" cy="25" r="6" fill="#ef4444"/>
+    <circle cx="50" cy="25" r="6" fill="#eab308"/>
+    <circle cx="70" cy="25" r="6" fill="#22c55e"/>
+    <text x="375" y="29" text-anchor="middle" font-size="11" fill="#94a3b8">otel-genai-graph — zero-Cypher cost attribution</text>
+  </g>
+
+  <!-- Loop length: 12s. Stages:
+       t=0s    prompt shown, cursor blinking
+       t=0.8s  command revealed (whole line fades in)
+       t=2.4s  header row fades in
+       t=2.8s  row 1 (anthropic/claude-sonnet-4-5)
+       t=3.2s  row 2 (openai/qwen2.5:7b — real Ollama)
+       t=3.6s  row 3 (anthropic/claude-opus-4-7)
+       t=4.0s  row 4 (openai/text-embedding-3-small)
+       t=4.4s  row 5 (openai/nomic-embed-text — real Ollama embed)
+       t=5.2s  summary line
+       t=11s   fade everything out
+       t=12s   loop
+  -->
+
+  <!-- Prompt -->
+  <g font-size="13" fill="#e2e8f0">
+    <text x="28" y="70" fill="#7dd3fc">$</text>
+
+    <!-- Command (reveals at t=0.8s) -->
+    <g opacity="0">
+      <animate attributeName="opacity" values="0;0;1;1;1;0;0"
+               keyTimes="0;0.066;0.1;0.9;0.92;0.95;1" dur="12s" repeatCount="indefinite"/>
+      <text x="48" y="70">python tools/render_graph.py --from-neo4j \</text>
+      <text x="58" y="90">--query cost_by_model --format table</text>
+    </g>
+
+    <!-- Blinking cursor during initial wait -->
+    <rect x="48" y="58" width="8" height="16" fill="#e2e8f0" opacity="0">
+      <animate attributeName="opacity" values="1;1;0;0;0"
+               keyTimes="0;0.066;0.1;0.95;1" dur="12s" repeatCount="indefinite"/>
+      <animate attributeName="fill-opacity" values="1;0;1" dur="1s"
+               repeatCount="indefinite" begin="0s" end="1s"/>
+    </rect>
+  </g>
+
+  <!-- Output table header (fades at t=2.4s) -->
+  <g font-size="12" fill="#cbd5e1" opacity="0">
+    <animate attributeName="opacity" values="0;0;1;1;0;0"
+             keyTimes="0;0.18;0.22;0.9;0.95;1" dur="12s" repeatCount="indefinite"/>
+    <text x="28" y="128">provider   model                   calls  input_tokens  output_tokens</text>
+    <text x="28" y="144" fill="#475569">---------  ----------------------  -----  ------------  -------------</text>
+  </g>
+
+  <!-- Row 1: anthropic/claude-sonnet-4-5 (t=2.8s) -->
+  <g font-size="12" fill="#e2e8f0" opacity="0">
+    <animate attributeName="opacity" values="0;0;1;1;0;0"
+             keyTimes="0;0.21;0.233;0.9;0.95;1" dur="12s" repeatCount="indefinite"/>
+    <text x="28" y="162"><tspan fill="#fde68a">anthropic</tspan>  <tspan>claude-sonnet-4-5</tspan>       <tspan fill="#cbd5e1">7      1760          830</tspan></text>
+  </g>
+
+  <!-- Row 2: openai/qwen2.5:7b — real Ollama (t=3.2s), highlighted -->
+  <g font-size="12" fill="#e2e8f0" opacity="0">
+    <animate attributeName="opacity" values="0;0;1;1;0;0"
+             keyTimes="0;0.24;0.266;0.9;0.95;1" dur="12s" repeatCount="indefinite"/>
+    <text x="28" y="180"><tspan fill="#86efac">openai</tspan>     <tspan fill="#86efac">qwen2.5:7b</tspan>              <tspan fill="#cbd5e1">7      541           75</tspan>           <tspan fill="#64748b" font-style="italic">← real local Ollama</tspan></text>
+  </g>
+
+  <!-- Row 3: anthropic/claude-opus-4-7 (t=3.6s) -->
+  <g font-size="12" fill="#e2e8f0" opacity="0">
+    <animate attributeName="opacity" values="0;0;1;1;0;0"
+             keyTimes="0;0.27;0.3;0.9;0.95;1" dur="12s" repeatCount="indefinite"/>
+    <text x="28" y="198"><tspan fill="#fde68a">anthropic</tspan>  <tspan>claude-opus-4-7</tspan>         <tspan fill="#cbd5e1">1      500           300</tspan></text>
+  </g>
+
+  <!-- Row 4: openai/text-embedding-3-small (t=4.0s) -->
+  <g font-size="12" fill="#e2e8f0" opacity="0">
+    <animate attributeName="opacity" values="0;0;1;1;0;0"
+             keyTimes="0;0.3;0.333;0.9;0.95;1" dur="12s" repeatCount="indefinite"/>
+    <text x="28" y="216"><tspan fill="#fde68a">openai</tspan>     <tspan>text-embedding-3-small</tspan>  <tspan fill="#cbd5e1">1      20            0</tspan></text>
+  </g>
+
+  <!-- Row 5: openai/nomic-embed-text — real Ollama embed (t=4.4s) -->
+  <g font-size="12" fill="#e2e8f0" opacity="0">
+    <animate attributeName="opacity" values="0;0;1;1;0;0"
+             keyTimes="0;0.33;0.366;0.9;0.95;1" dur="12s" repeatCount="indefinite"/>
+    <text x="28" y="234"><tspan fill="#86efac">openai</tspan>     <tspan fill="#86efac">nomic-embed-text</tspan>        <tspan fill="#cbd5e1">1      7             0</tspan>             <tspan fill="#64748b" font-style="italic">← real local Ollama</tspan></text>
+  </g>
+
+  <!-- Pitch summary (t=5.2s) -->
+  <g font-size="12" opacity="0">
+    <animate attributeName="opacity" values="0;0;1;1;0;0"
+             keyTimes="0;0.4;0.433;0.9;0.95;1" dur="12s" repeatCount="indefinite"/>
+    <text x="28" y="286" fill="#a7f3d0">✓ mixed-vendor cost attribution, one command, $0, zero Cypher.</text>
+    <text x="28" y="308" fill="#94a3b8">  try more:  --query agent_delegation --format html</text>
+    <text x="28" y="324" fill="#94a3b8">            --query session_tree --param session_id=ollama-multi-demo --format html</text>
+    <text x="28" y="340" fill="#94a3b8">            --query failed_tools --format html</text>
+  </g>
+
+  <!-- Trailing prompt with blinking cursor -->
+  <g font-size="13" opacity="0">
+    <animate attributeName="opacity" values="0;0;1;1;0;0"
+             keyTimes="0;0.55;0.583;0.9;0.95;1" dur="12s" repeatCount="indefinite"/>
+    <text x="28" y="380" fill="#7dd3fc">$</text>
+    <rect x="48" y="368" width="8" height="16" fill="#e2e8f0">
+      <animate attributeName="opacity" values="1;0;1" dur="1s" repeatCount="indefinite"/>
+    </rect>
+  </g>
+</svg>
