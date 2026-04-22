@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 480" font-family="-apple-system, system-ui, Segoe UI, Roboto, sans-serif">
+  <title>Multi-turn Session merge (real Ollama capture)</title>
+  <desc>Three chat turns captured across three distinct trace_ids collapse to one Session node thanks to the shared gen_ai.conversation.id. Rendered from tests/fixtures/real/ollama/real_multi_turn_ollama-multi-demo_turn*.json.</desc>
+
+  <defs>
+    <marker id="mt-arrow" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#64748b"/>
+    </marker>
+  </defs>
+
+  <!-- legend -->
+  <g font-size="11" fill="#475569">
+    <rect x="700" y="20" width="200" height="96" rx="6" fill="#f8fafc" stroke="#cbd5e1"/>
+    <text x="712" y="40" font-weight="600" fill="#0f172a">Node labels</text>
+    <circle cx="720" cy="58" r="6" fill="#6366f1"/><text x="734" y="62">Session</text>
+    <circle cx="720" cy="76" r="6" fill="#0ea5e9"/><text x="734" y="80">Operation</text>
+    <circle cx="720" cy="94" r="6" fill="#f59e0b"/><text x="734" y="98">Model</text>
+  </g>
+
+  <!-- CONTAINS edges: Session → 3 Operations -->
+  <g stroke="#64748b" stroke-width="1.5" fill="none" marker-end="url(#mt-arrow)">
+    <path d="M 175 200 Q 240 140, 320 130"/>
+    <path d="M 175 210 L 320 215"/>
+    <path d="M 175 220 Q 240 280, 320 300"/>
+  </g>
+
+  <!-- EXECUTED edges: 3 Operations → 1 Model -->
+  <g stroke="#64748b" stroke-width="1.5" fill="none" marker-end="url(#mt-arrow)">
+    <path d="M 540 135 Q 620 155, 670 210"/>
+    <path d="M 540 215 L 670 215"/>
+    <path d="M 540 300 Q 620 265, 670 220"/>
+  </g>
+
+  <!-- Edge labels -->
+  <g font-size="10" fill="#475569">
+    <text x="225" y="152">CONTAINS</text>
+    <text x="225" y="195">CONTAINS</text>
+    <text x="225" y="278">CONTAINS</text>
+    <text x="570" y="152">EXECUTED</text>
+    <text x="570" y="200">EXECUTED</text>
+    <text x="570" y="276">EXECUTED</text>
+  </g>
+
+  <!-- Session node -->
+  <g>
+    <rect x="40" y="180" width="140" height="60" rx="28" fill="#eef2ff" stroke="#6366f1" stroke-width="2"/>
+    <text x="110" y="204" text-anchor="middle" font-size="13" font-weight="600" fill="#1e1b4b">Session</text>
+    <text x="110" y="220" text-anchor="middle" font-size="10" fill="#475569">ollama-multi-demo</text>
+    <text x="110" y="234" text-anchor="middle" font-size="9" fill="#94a3b8">1 node, 3 turns</text>
+  </g>
+
+  <!-- Operation nodes (3 turns, 3 different trace_ids) -->
+  <g>
+    <rect x="320" y="100" width="220" height="60" rx="6" fill="#f0f9ff" stroke="#0ea5e9" stroke-width="2"/>
+    <text x="430" y="122" text-anchor="middle" font-size="12" font-weight="600" fill="#0c4a6e">Operation · chat · turn 1</text>
+    <text x="430" y="140" text-anchor="middle" font-size="9" fill="#475569">trace_id = 7f42…  in=34  out=2</text>
+    <text x="430" y="152" text-anchor="middle" font-size="9" fill="#64748b" font-style="italic">"Reply with just: hi" → "hi"</text>
+  </g>
+
+  <g>
+    <rect x="320" y="185" width="220" height="60" rx="6" fill="#f0f9ff" stroke="#0ea5e9" stroke-width="2"/>
+    <text x="430" y="207" text-anchor="middle" font-size="12" font-weight="600" fill="#0c4a6e">Operation · chat · turn 2</text>
+    <text x="430" y="225" text-anchor="middle" font-size="9" fill="#475569">trace_id = 8a91…  in=34  out=2</text>
+    <text x="430" y="237" text-anchor="middle" font-size="9" fill="#64748b" font-style="italic">"Reply with just: yes" → "yes"</text>
+  </g>
+
+  <g>
+    <rect x="320" y="270" width="220" height="60" rx="6" fill="#f0f9ff" stroke="#0ea5e9" stroke-width="2"/>
+    <text x="430" y="292" text-anchor="middle" font-size="12" font-weight="600" fill="#0c4a6e">Operation · chat · turn 3</text>
+    <text x="430" y="310" text-anchor="middle" font-size="9" fill="#475569">trace_id = c3d7…  in=34  out=2</text>
+    <text x="430" y="322" text-anchor="middle" font-size="9" fill="#64748b" font-style="italic">"Reply with just: bye" → "bye"</text>
+  </g>
+
+  <!-- Model node -->
+  <g>
+    <rect x="670" y="185" width="210" height="60" rx="6" fill="#fffbeb" stroke="#f59e0b" stroke-width="2"/>
+    <text x="775" y="207" text-anchor="middle" font-size="13" font-weight="600" fill="#78350f">Model</text>
+    <text x="775" y="223" text-anchor="middle" font-size="10" fill="#475569">openai/qwen2.5:7b</text>
+    <text x="775" y="237" text-anchor="middle" font-size="9" fill="#94a3b8">deduped from 7 captures</text>
+  </g>
+
+  <!-- Caption -->
+  <text x="460" y="420" text-anchor="middle" font-size="12" fill="#64748b" font-style="italic">
+    Three chat turns, three distinct trace_ids, one shared conversation.id — collapsed to a single Session node by the mapper.
+  </text>
+  <text x="460" y="440" text-anchor="middle" font-size="11" fill="#94a3b8">
+    Live Ollama capture · tests/fixtures/real/ollama/real_multi_turn_ollama-multi-demo_turn*.json
+  </text>
+</svg>

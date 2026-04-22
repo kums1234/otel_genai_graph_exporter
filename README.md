@@ -1,33 +1,42 @@
 # otel-genai-graph
 
-**Turn OpenTelemetry GenAI spans into a queryable Neo4j graph.**
-
-Linear LLM tracers show you one agent's timeline. This exporter maps the
-same spans to a graph, conversations, agents, LLM calls, tools, data
-sources, with typed relationships between them, so you can ask
-*structural* questions: who delegated to whom, what did this agent cost
-across its sub-agents, which data sources did a session hit, what broke
-when that tool failed.
-
-Works with every major provider (OpenAI, Anthropic, Gemini, Azure OpenAI
-classic / v1 / Foundry, Ollama, Groq, anything OpenAI-SDK-compatible) and
-ingests both OpenTelemetry GenAI **semantic conventions v1.37** canonical
-emitters and the pre-v1.37 shapes that most instrumentors still ship
-today (Google `gen_ai.system`, Arize OpenInference `session.id`,
-LangSmith, Traceloop's association bag, all handled with precedence
-tables documented in [`docs/mapping.md`](docs/mapping.md)).
+> **Turn your OpenTelemetry GenAI traces into a graph you can actually ask
+> questions of.** Cost per model, agent delegation, tool blast radius,
+> session structure — one command each, zero Cypher, mixed vendors, real
+> tokens.
 
 ![Multi-agent delegation, rendered from the `multi_agent` fixture](docs/images/multi-agent-graph.svg)
 
+## See it in one command
+
+Once you've loaded the bundled fixtures plus any live captures you've made, this is cross-vendor cost attribution in a single command:
+
+```bash
+$ python tools/render_graph.py --from-neo4j --query cost_by_model --format table
+
+provider   model                   calls  input_tokens  output_tokens
+---------  ----------------------  -----  ------------  -------------
+anthropic  claude-sonnet-4-5       7      1760          830
+openai     qwen2.5:7b              7      541           75
+anthropic  claude-opus-4-7         1      500           300
+openai     text-embedding-3-small  1      20            0
+openai     nomic-embed-text        1      7             0
+```
+
+That row mixing Anthropic (synthetic fixtures) with `openai/qwen2.5:7b`
+(real local Ollama) and `openai/nomic-embed-text` (real embeddings) is
+the point — every provider, classic or cutting-edge, ends up on the
+same graph coordinate system.
+
 ## What it does
 
-- **Ingest** OTLP/JSON `resourceSpans` from any GenAI-instrumented app.
-- **Map** to a typed graph: `Session` → `Operation` → `Model`/`Tool`/`DataSource`, `Agent` ─`INVOKED`→ `Operation`, `Agent` ─`DELEGATED_TO`→ `Agent`.
-- **Write idempotently** to Neo4j via `MERGE` on natural keys. Re-ingesting the same trace is a no-op.
-- **Stream live or load files**, ships a `SpanExporter` (plug into any `TracerProvider`) and a file loader (`python -m otel_genai_graph.load trace.json ...`).
-- **Explore without Cypher**, a bundled library of 10 saved queries (`cost_by_model`, `session_tree`, `agent_delegation`, `failed_tools`, …) that emit interactive HTML (cytoscape.js, single-file, no install), node-link JSON, GraphML, or CSV/ASCII tables. See the [sample](#explore-without-cypher) below.
-- **Canonicalise legacy attributes**, `gen_ai.system → gen_ai.provider.name`, `generate_content → chat`, plus a priority-ordered `conversation.id` fallback list (`session.id`, `langsmith.trace.session_id`, `traceloop.association.properties.*`). Spec-conformant emitters still win; everything else gets pulled into the same graph coordinate system.
-- **Enforce shape-independent invariants**, 7 structural checks that run against every fixture: edge endpoint types, Session uniqueness, DAG property of parent/delegation edges, orphan secondaries, token-count and time-ordering sanity.
+- **Ingests** OTLP/JSON `resourceSpans` from any GenAI-instrumented app — OpenAI, Anthropic, Gemini, Azure OpenAI (classic / v1 / Foundry unified), Ollama, Groq, and anything OpenAI-SDK-compatible.
+- **Maps** to a typed graph: `Session` → `Operation` → `Model` / `Tool` / `DataSource`, `Agent` ─`INVOKED`→ `Operation`, `Agent` ─`DELEGATED_TO`→ `Agent`.
+- **Writes idempotently** to Neo4j via `MERGE` on natural keys. Re-ingesting the same trace is a no-op.
+- **Streams live or loads files** — ships a `SpanExporter` (plug into any `TracerProvider`) and a file loader (`python -m otel_genai_graph.load trace.json …`).
+- **Explores without Cypher** — a library of 10 saved queries (`cost_by_model`, `session_tree`, `agent_delegation`, `failed_tools`, …) exports to interactive HTML (cytoscape.js, single file, no install), node-link JSON, GraphML, or CSV/ASCII tables.
+- **Speaks legacy and canonical v1.37** — `gen_ai.system → gen_ai.provider.name`, `generate_content → chat`, plus a priority-ordered `conversation.id` fallback list (`session.id`, `langsmith.trace.session_id`, `traceloop.association.properties.*`). Canonical emitters always win; everything else gets pulled into the same graph.
+- **Enforces 7 shape-independent invariants** on every graph — edge endpoint types, Session uniqueness, DAG property of parent / delegation edges, no orphan Models / Tools / DataSources, token-count and time-ordering sanity.
 
 ## 60-second quickstart
 
@@ -110,36 +119,64 @@ The v0.1 library (10 queries, full list in [`docs/saved-queries.md`](docs/saved-
 python tools/render_graph.py --from-neo4j --query cost_by_model --format table
 ```
 
-Against the bundled fixtures this prints:
+With the bundled fixtures + a bit of real Ollama traffic loaded:
 
 ```
 provider   model                   calls  input_tokens  output_tokens
 ---------  ----------------------  -----  ------------  -------------
 anthropic  claude-sonnet-4-5       7      1760          830
+openai     qwen2.5:7b              7      541           75
 anthropic  claude-opus-4-7         1      500           300
 openai     text-embedding-3-small  1      20            0
+openai     nomic-embed-text        1      7             0
 ```
 
-Same query as CSV piped into a spreadsheet / BI tool:
+Pipe it into anywhere — spreadsheets, BI, Slack, a Grafana panel:
 
 ```bash
-python tools/render_graph.py --from-neo4j --query cost_by_model \
-    --output /tmp/cost --format csv
+python tools/render_graph.py --from-neo4j --query cost_by_model --format csv    > cost.csv
+python tools/render_graph.py --from-neo4j --query cost_by_model --format jsonl  | jq '.'
 ```
 
-### Sample: "show me one conversation's call tree"
+### Sample: "multi-turn session across three traces, collapsed"
+
+![Multi-turn session merge rendered from a real Ollama capture](docs/images/multi-turn-session.svg)
 
 ```bash
 python tools/render_graph.py --from-neo4j \
-    --query session_tree --param session_id=conv-3 \
-    --output /tmp/session-conv3 --format html
-open /tmp/session-conv3.html
+    --query session_tree --param session_id=ollama-multi-demo \
+    --output /tmp/multi --format html
+open /tmp/multi.html
 ```
 
-`session-conv3.html` is self-contained (cytoscape.js from CDN, everything
-else inline). Pan / zoom / hover nodes for properties / click to select.
-Share it with a non-technical stakeholder by emailing one file. No
-server, no Neo4j required on their side.
+Three chat turns, three **distinct `trace_id`s**, one shared
+`gen_ai.conversation.id` — collapsed to a single `Session` node by the
+mapper. This is what you can't do with a linear tracer: a turn-by-turn
+graph that persists identity across retries, async agents, and
+background batches. Real capture, not a synthetic fixture.
+
+### Sample: "show me exactly what happened in that tool call"
+
+![Real tool_call flow rendered from tests/capture_real_traces.py --shape tool_call](docs/images/tool-call-flow.svg)
+
+```bash
+python tools/render_graph.py --from-neo4j \
+    --query session_tree --param session_id=real-1776842869-0 \
+    --output /tmp/tool --format html
+open /tmp/tool.html
+```
+
+A real `qwen2.5:7b` on local Ollama requested `get_current_time`, it was
+evaluated locally, the model produced the final answer. The graph shows
+the whole flow: `Agent` ─`INVOKED`→ `invoke_agent` ─`PARENT_OF`→ two
+`chat` + one `execute_tool`, with `EXECUTED` and `CALLED` edges
+fanning out to the shared `Model` and `Tool` nodes. 8 nodes, 11 edges, 0
+invariant violations.
+
+Every HTML output is **one self-contained file** (cytoscape.js loaded
+from CDN, everything else inline). Email it to a non-technical
+stakeholder; they get pan / zoom / hover / click for node properties.
+No server, no Neo4j required on the receiving end.
 
 ### Sample: any fixture, offline, no Neo4j
 

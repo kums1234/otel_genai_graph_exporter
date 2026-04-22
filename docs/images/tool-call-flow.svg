@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 560" font-family="-apple-system, system-ui, Segoe UI, Roboto, sans-serif">
+  <title>Tool-call flow from a real Ollama / qwen2.5:7b capture</title>
+  <desc>An invoke_agent span wrapping two chat spans and one execute_tool span. The model requested a tool; the tool was evaluated locally; the second chat produced the final answer. Captured via tests/capture_real_traces.py --shape tool_call against localhost Ollama.</desc>
+
+  <defs>
+    <marker id="tc-arrow" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#64748b"/>
+    </marker>
+  </defs>
+
+  <!-- legend -->
+  <g font-size="11" fill="#475569">
+    <rect x="720" y="20" width="220" height="134" rx="6" fill="#f8fafc" stroke="#cbd5e1"/>
+    <text x="732" y="40" font-weight="600" fill="#0f172a">Node labels</text>
+    <circle cx="740" cy="58" r="6" fill="#6366f1"/><text x="754" y="62">Session</text>
+    <circle cx="740" cy="76" r="6" fill="#10b981"/><text x="754" y="80">Agent</text>
+    <circle cx="740" cy="94" r="6" fill="#0ea5e9"/><text x="754" y="98">Operation</text>
+    <circle cx="740" cy="112" r="6" fill="#db2777"/><text x="754" y="116">Tool</text>
+    <circle cx="740" cy="130" r="6" fill="#f59e0b"/><text x="754" y="134">Model</text>
+  </g>
+
+  <!-- CONTAINS from Session → 4 operations -->
+  <g stroke="#64748b" stroke-width="1.3" fill="none" marker-end="url(#tc-arrow)" opacity="0.65">
+    <path d="M 135 130 Q 260 160, 360 215"/>
+    <path d="M 135 145 Q 220 300, 360 340"/>
+    <path d="M 135 160 Q 280 420, 360 465"/>
+    <path d="M 135 125 Q 300 120, 360 140"/>
+  </g>
+
+  <!-- INVOKED: time-agent → invoke_agent span -->
+  <g stroke="#64748b" stroke-width="1.5" fill="none" marker-end="url(#tc-arrow)">
+    <path d="M 235 280 L 360 160"/>
+  </g>
+
+  <!-- PARENT_OF edges (dashed) from invoke_agent to children -->
+  <g stroke="#64748b" stroke-width="1.3" fill="none" marker-end="url(#tc-arrow)" stroke-dasharray="4 3">
+    <path d="M 485 160 Q 530 200, 485 215"/>
+    <path d="M 485 160 Q 560 290, 485 340"/>
+    <path d="M 485 160 Q 590 390, 485 465"/>
+  </g>
+
+  <!-- CALLED: execute_tool → Tool -->
+  <g stroke="#64748b" stroke-width="1.5" fill="none" marker-end="url(#tc-arrow)">
+    <path d="M 595 355 Q 650 330, 695 305"/>
+  </g>
+
+  <!-- EXECUTED: two chat ops → Model -->
+  <g stroke="#64748b" stroke-width="1.5" fill="none" marker-end="url(#tc-arrow)">
+    <path d="M 595 225 Q 660 290, 695 415"/>
+    <path d="M 595 475 Q 650 460, 695 440"/>
+  </g>
+
+  <!-- Edge labels -->
+  <g font-size="10" fill="#475569">
+    <text x="170" y="105">CONTAINS ×4</text>
+    <text x="280" y="220" fill="#065f46" font-weight="600">INVOKED</text>
+    <text x="510" y="208" fill="#475569" font-style="italic">PARENT_OF</text>
+    <text x="540" y="260" fill="#475569" font-style="italic">PARENT_OF</text>
+    <text x="540" y="380" fill="#475569" font-style="italic">PARENT_OF</text>
+    <text x="625" y="310" fill="#9d174d" font-weight="600">CALLED</text>
+    <text x="625" y="270" fill="#78350f">EXECUTED</text>
+    <text x="625" y="460" fill="#78350f">EXECUTED</text>
+  </g>
+
+  <!-- Session -->
+  <g>
+    <rect x="20" y="110" width="120" height="50" rx="24" fill="#eef2ff" stroke="#6366f1" stroke-width="2"/>
+    <text x="80" y="134" text-anchor="middle" font-size="12" font-weight="600" fill="#1e1b4b">Session</text>
+    <text x="80" y="150" text-anchor="middle" font-size="9" fill="#475569">real-1776842869-0</text>
+  </g>
+
+  <!-- Agent -->
+  <g>
+    <rect x="150" y="255" width="120" height="50" rx="12" fill="#ecfdf5" stroke="#10b981" stroke-width="2"/>
+    <text x="210" y="279" text-anchor="middle" font-size="12" font-weight="600" fill="#064e3b">Agent</text>
+    <text x="210" y="295" text-anchor="middle" font-size="10" fill="#475569">time-agent</text>
+  </g>
+
+  <!-- Operation 1: invoke_agent (root of the tool-use flow) -->
+  <g>
+    <rect x="360" y="130" width="125" height="50" rx="6" fill="#f0f9ff" stroke="#0ea5e9" stroke-width="2"/>
+    <text x="422" y="152" text-anchor="middle" font-size="11" font-weight="600" fill="#0c4a6e">invoke_agent</text>
+    <text x="422" y="168" text-anchor="middle" font-size="9" fill="#475569">span a1…</text>
+  </g>
+
+  <!-- Operation 2: chat (1st – model requests tool) -->
+  <g>
+    <rect x="360" y="205" width="230" height="50" rx="6" fill="#f0f9ff" stroke="#0ea5e9" stroke-width="2"/>
+    <text x="475" y="224" text-anchor="middle" font-size="11" font-weight="600" fill="#0c4a6e">chat · turn 1 (tool decision)</text>
+    <text x="475" y="240" text-anchor="middle" font-size="9" fill="#475569">in=196, out=23 · "call get_current_time"</text>
+  </g>
+
+  <!-- Operation 3: execute_tool -->
+  <g>
+    <rect x="360" y="330" width="230" height="50" rx="6" fill="#f0f9ff" stroke="#0ea5e9" stroke-width="2"/>
+    <text x="475" y="352" text-anchor="middle" font-size="11" font-weight="600" fill="#0c4a6e">execute_tool</text>
+    <text x="475" y="367" text-anchor="middle" font-size="9" fill="#64748b" font-style="italic">status = OK (evaluated locally)</text>
+  </g>
+
+  <!-- Operation 4: chat (2nd – final answer) -->
+  <g>
+    <rect x="360" y="455" width="230" height="50" rx="6" fill="#f0f9ff" stroke="#0ea5e9" stroke-width="2"/>
+    <text x="475" y="474" text-anchor="middle" font-size="11" font-weight="600" fill="#0c4a6e">chat · turn 2 (final answer)</text>
+    <text x="475" y="490" text-anchor="middle" font-size="9" fill="#475569">in=173, out=29 · "The current UTC time is…"</text>
+  </g>
+
+  <!-- Tool -->
+  <g>
+    <rect x="695" y="280" width="210" height="50" rx="6" fill="#fdf2f8" stroke="#db2777" stroke-width="2"/>
+    <text x="800" y="302" text-anchor="middle" font-size="12" font-weight="600" fill="#831843">Tool</text>
+    <text x="800" y="318" text-anchor="middle" font-size="10" fill="#475569">get_current_time</text>
+  </g>
+
+  <!-- Model -->
+  <g>
+    <rect x="695" y="415" width="210" height="50" rx="6" fill="#fffbeb" stroke="#f59e0b" stroke-width="2"/>
+    <text x="800" y="437" text-anchor="middle" font-size="12" font-weight="600" fill="#78350f">Model</text>
+    <text x="800" y="453" text-anchor="middle" font-size="10" fill="#475569">openai/qwen2.5:7b</text>
+  </g>
+
+  <!-- Caption -->
+  <text x="480" y="540" text-anchor="middle" font-size="11" fill="#64748b" font-style="italic">
+    Real Ollama capture — qwen2.5:7b requested a tool, it was evaluated locally, the model produced the final answer. 8 nodes, 11 edges, 0 invariant violations.
+  </text>
+</svg>
