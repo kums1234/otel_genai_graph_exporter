@@ -4,6 +4,11 @@
 > questions of.** Cost per model, agent delegation, tool blast radius,
 > session structure — one command each, zero Cypher, mixed vendors, real
 > tokens.
+[![PyPI version](https://img.shields.io/pypi/v/otel-genai-graph.svg)](https://pypi.org/project/otel-genai-graph/)
+
+[![Python versions](https://img.shields.io/pypi/pyversions/otel-genai-graph.svg)](https://pypi.org/project/otel-genai-graph/)
+
+[![License](https://img.shields.io/pypi/l/otel-genai-graph.svg)](LICENSE)
 
 ![Demo — running the cost_by_model saved query](docs/images/demo.svg)
 
@@ -43,7 +48,7 @@ same graph coordinate system.
 ## 60-second quickstart
 
 ```bash
-git clone <repo-url> && cd otel-genai-graph
+git clone https://github.com/kums1234/otel_genai_graph_exporter.git && cd otel-genai-graph
 python3 -m venv .venv && . .venv/bin/activate
 pip install -e ".[dev]"
 pytest                                    # 833 unit/integration tests

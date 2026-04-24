@@ -5,21 +5,43 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "otel-genai-graph"
 version = "0.1.0"
-description = "OpenTelemetry GenAI span → Neo4j graph exporter (v1.37 semconv)"
+description = "OpenTelemetry GenAI spans → queryable Neo4j graph. Mixed-vendor cost attribution, agent delegation, tool blast radius — one command, zero Cypher."
 readme = "README.md"
 requires-python = ">=3.10"
 license = { text = "Apache-2.0" }
-authors = [{ name = "otel-genai-graph contributors" }]
-keywords = ["opentelemetry", "genai", "neo4j", "observability", "llm", "graph"]
+authors = [
+    { name = "Kumaran Ravichandran", email = "kumaran.pec@gmail.com" },
+]
+maintainers = [
+    { name = "Kumaran Ravichandran", email = "kumaran.pec@gmail.com" },
+]
+keywords = [
+    "opentelemetry",
+    "genai",
+    "neo4j",
+    "observability",
+    "llm",
+    "graph",
+    "otel-semconv",
+    "agent-observability",
+    "cost-attribution",
+    "llm-tracing",
+]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
+    "Intended Audience :: Information Technology",
     "License :: OSI Approved :: Apache Software License",
+    "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Software Development :: Libraries :: Python Modules",
     "Topic :: System :: Monitoring",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Typing :: Typed",
 ]
 dependencies = [
     "opentelemetry-api>=1.27",
@@ -39,9 +61,15 @@ otlp = [
     "opentelemetry-exporter-otlp-proto-http>=1.27",
 ]
 
+[project.scripts]
+otel-genai-load = "otel_genai_graph.load:main"
+
 [project.urls]
-Homepage = "https://github.com/kums/otel_genai_graph_exporter"
-Issues = "https://github.com/kums/otel_genai_graph_exporter/issues"
+Homepage      = "https://github.com/kums1234/otel_genai_graph_exporter"
+Source        = "https://github.com/kums1234/otel_genai_graph_exporter"
+Issues        = "https://github.com/kums1234/otel_genai_graph_exporter/issues"
+Changelog     = "https://github.com/kums1234/otel_genai_graph_exporter/blob/main/CHANGELOG.md"
+Documentation = "https://github.com/kums1234/otel_genai_graph_exporter#readme"
 
 [tool.setuptools.packages.find]
 where = ["src"]

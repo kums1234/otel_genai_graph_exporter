@@ -37,3 +37,4 @@ dumps/
 # Real-API capture output — contains live response text + user-specific
 # deployment identifiers. Seed a sanitised copy under examples/ for demos.
 tests/fixtures/real/
+docs/

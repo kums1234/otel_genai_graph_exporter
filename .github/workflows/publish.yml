@@ -1,0 +1,85 @@
+name: publish
+
+# Publishes to PyPI on every v*.*.* tag push using PyPI Trusted Publisher
+# (OIDC) — no API token stored in GitHub secrets. Register the Trusted
+# Publisher on PyPI before the first automated run; see
+# docs/outreach/pypi-release.md § 5a.
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: build sdist + wheel
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install build tooling
+        run: pip install --upgrade build twine
+      - name: Build distributions
+        run: python -m build
+      - name: Verify long-description rendering
+        run: python -m twine check dist/*
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+          if-no-files-found: error
+
+  publish:
+    name: publish to PyPI
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/project/otel-genai-graph/
+    permissions:
+      id-token: write  # required for Trusted Publisher (OIDC)
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+      - uses: pypa/gh-action-pypi-publish@release/v1
+
+  release:
+    name: GitHub Release
+    needs: publish
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+      - name: Extract CHANGELOG section for this tag
+        id: notes
+        run: |
+          set -euo pipefail
+          VERSION="${GITHUB_REF_NAME#v}"
+          # Pull everything between ## [VERSION] and the next ## [ heading.
+          awk "/^## \\[$VERSION\\]/,/^## \\[/" CHANGELOG.md \
+              | sed '$d' > /tmp/release-notes.md
+          if [ ! -s /tmp/release-notes.md ]; then
+            echo "_No CHANGELOG.md entry for $VERSION — please update before releasing._" \
+                > /tmp/release-notes.md
+          fi
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+      - uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: v${{ steps.notes.outputs.version }}
+          body_path: /tmp/release-notes.md
+          files: dist/*
+          draft: false
+          prerelease: ${{ contains(github.ref_name, '-') }}
