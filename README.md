@@ -5,8 +5,8 @@
 > session structure — one command each, zero Cypher, mixed vendors, real
 > tokens.
 [![PyPI version](https://img.shields.io/pypi/v/otel-genai-graph.svg)](https://pypi.org/project/otel-genai-graph/)
-
 [![Python versions](https://img.shields.io/pypi/pyversions/otel-genai-graph.svg)](https://pypi.org/project/otel-genai-graph/)
+[![Live demo](https://img.shields.io/badge/demo-live-brightgreen.svg)](https://kums1234.github.io/otel_genai_graph_exporter/)
 
 [![License](https://img.shields.io/pypi/l/otel-genai-graph.svg)](LICENSE)
 
