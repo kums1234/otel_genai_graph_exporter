@@ -19,7 +19,7 @@ import csv
 import html
 import io
 import json
-from typing import Any, Iterable, Optional
+from typing import Any, Iterable
 
 from .schema import (
     Agent,

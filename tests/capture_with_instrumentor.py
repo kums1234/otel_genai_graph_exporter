@@ -57,12 +57,11 @@ from __future__ import annotations
 
 import argparse
 import json
-import os
 import sys
 import time
 import uuid
 from pathlib import Path
-from typing import Any, Callable, Optional
+from typing import Callable, Optional
 
 # Make the capture_real_traces module importable for provider reuse.
 sys.path.insert(0, str(Path(__file__).resolve().parent))

@@ -11,7 +11,7 @@ See `docs/saved-queries.md` for the full contract. The short version:
 """
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Optional
 
 

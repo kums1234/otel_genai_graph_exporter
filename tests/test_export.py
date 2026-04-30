@@ -112,7 +112,7 @@ def test_graphml_parses_as_xml_and_has_right_counts(multi_agent_graph) -> None:
 
 
 def test_graphml_escapes_special_characters() -> None:
-    from otel_genai_graph.schema import Edge, Graph, Session
+    from otel_genai_graph.schema import Graph, Session
     g = Graph()
     # An id containing characters that would corrupt XML if not escaped.
     weird_id = 'conv<&>"demo\''
@@ -147,7 +147,7 @@ def test_csv_has_header_and_rows() -> None:
 
 def test_jsonl_round_trips_row_count() -> None:
     out = table_to_jsonl(_TABLE_ROWS)
-    lines = [l for l in out.splitlines() if l]
+    lines = [ln for ln in out.splitlines() if ln]
     assert len(lines) == len(_TABLE_ROWS)
     for line, expected in zip(lines, _TABLE_ROWS):
         assert json.loads(line) == {**expected}

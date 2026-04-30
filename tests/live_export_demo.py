@@ -107,7 +107,7 @@ def main() -> int:
     print(file=sys.stderr)
     print(f"  MATCH p = (s:Session {{id:'{conv_id}'}})-[:CONTAINS]->(o:Operation) RETURN p",
           file=sys.stderr)
-    print(f"  MATCH p = (a:Agent)-[:DELEGATED_TO]->(b:Agent) RETURN p",
+    print("  MATCH p = (a:Agent)-[:DELEGATED_TO]->(b:Agent) RETURN p",
           file=sys.stderr)
     return 0
 
