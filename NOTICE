@@ -1,0 +1,13 @@
+otel-genai-graph
+Copyright 2026 Kumaran Ravichandran and otel-genai-graph contributors
+
+This product includes software developed by:
+  - The OpenTelemetry Authors (https://opentelemetry.io)
+    Licensed under Apache License 2.0.
+  - Neo4j, Inc. (Neo4j Python Driver — https://github.com/neo4j/neo4j-python-driver)
+    Licensed under Apache License 2.0.
+  - Saurabh Kumar (python-dotenv — https://github.com/theskumar/python-dotenv)
+    Licensed under BSD 3-Clause License.
+
+This product depends at runtime on the above components but does not
+redistribute them. Their licenses apply to those components only.

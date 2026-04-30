@@ -353,4 +353,11 @@ are in that file.
 
 ## License
 
-Apache-2.0.
+Released under the [Apache License, Version 2.0](LICENSE) (SPDX:
+`Apache-2.0`). See [`NOTICE`](NOTICE) for attribution requirements
+when redistributing.
+
+You may use, modify, and distribute this software for any purpose,
+including commercial use, with the obligations spelled out in the
+license — most notably preserving copyright/notice files and stating
+the changes you've made.
