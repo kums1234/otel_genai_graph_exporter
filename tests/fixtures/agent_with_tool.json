@@ -6,12 +6,20 @@
       {
         "resource": {
           "attributes": [
-            {"key": "service.name", "value": {"stringValue": "research-agent"}}
+            {
+              "key": "service.name",
+              "value": {
+                "stringValue": "research-agent"
+              }
+            }
           ]
         },
         "scopeSpans": [
           {
-            "scope": {"name": "opentelemetry.instrumentation.langgraph", "version": "0.2.0"},
+            "scope": {
+              "name": "opentelemetry.instrumentation.langgraph",
+              "version": "0.2.0"
+            },
             "spans": [
               {
                 "traceId": "11111111111111111111111111111111",
@@ -22,12 +30,34 @@
                 "startTimeUnixNano": "1737000100000000000",
                 "endTimeUnixNano": "1737000103000000000",
                 "attributes": [
-                  {"key": "gen_ai.operation.name",   "value": {"stringValue": "invoke_agent"}},
-                  {"key": "gen_ai.agent.id",         "value": {"stringValue": "agent-A"}},
-                  {"key": "gen_ai.agent.name",       "value": {"stringValue": "research-agent"}},
-                  {"key": "gen_ai.conversation.id",  "value": {"stringValue": "conv-2"}}
+                  {
+                    "key": "gen_ai.operation.name",
+                    "value": {
+                      "stringValue": "invoke_agent"
+                    }
+                  },
+                  {
+                    "key": "gen_ai.agent.id",
+                    "value": {
+                      "stringValue": "agent-A"
+                    }
+                  },
+                  {
+                    "key": "gen_ai.agent.name",
+                    "value": {
+                      "stringValue": "research-agent"
+                    }
+                  },
+                  {
+                    "key": "gen_ai.conversation.id",
+                    "value": {
+                      "stringValue": "conv-2"
+                    }
+                  }
                 ],
-                "status": {"code": 1}
+                "status": {
+                  "code": 1
+                }
               },
               {
                 "traceId": "11111111111111111111111111111111",
@@ -38,16 +68,58 @@
                 "startTimeUnixNano": "1737000100100000000",
                 "endTimeUnixNano": "1737000100700000000",
                 "attributes": [
-                  {"key": "gen_ai.operation.name",      "value": {"stringValue": "chat"}},
-                  {"key": "gen_ai.provider.name",       "value": {"stringValue": "anthropic"}},
-                  {"key": "gen_ai.request.model",       "value": {"stringValue": "claude-sonnet-4-5"}},
-                  {"key": "gen_ai.response.model",      "value": {"stringValue": "claude-sonnet-4-5"}},
-                  {"key": "gen_ai.conversation.id",     "value": {"stringValue": "conv-2"}},
-                  {"key": "gen_ai.agent.id",            "value": {"stringValue": "agent-A"}},
-                  {"key": "gen_ai.usage.input_tokens",  "value": {"intValue": "200"}},
-                  {"key": "gen_ai.usage.output_tokens", "value": {"intValue": "150"}}
+                  {
+                    "key": "gen_ai.operation.name",
+                    "value": {
+                      "stringValue": "chat"
+                    }
+                  },
+                  {
+                    "key": "gen_ai.provider.name",
+                    "value": {
+                      "stringValue": "anthropic"
+                    }
+                  },
+                  {
+                    "key": "gen_ai.request.model",
+                    "value": {
+                      "stringValue": "claude-sonnet-4-5"
+                    }
+                  },
+                  {
+                    "key": "gen_ai.response.model",
+                    "value": {
+                      "stringValue": "claude-sonnet-4-5"
+                    }
+                  },
+                  {
+                    "key": "gen_ai.conversation.id",
+                    "value": {
+                      "stringValue": "conv-2"
+                    }
+                  },
+                  {
+                    "key": "gen_ai.agent.id",
+                    "value": {
+                      "stringValue": "agent-A"
+                    }
+                  },
+                  {
+                    "key": "gen_ai.usage.input_tokens",
+                    "value": {
+                      "intValue": "200"
+                    }
+                  },
+                  {
+                    "key": "gen_ai.usage.output_tokens",
+                    "value": {
+                      "intValue": "150"
+                    }
+                  }
                 ],
-                "status": {"code": 1}
+                "status": {
+                  "code": 1
+                }
               },
               {
                 "traceId": "11111111111111111111111111111111",
@@ -58,12 +130,34 @@
                 "startTimeUnixNano": "1737000100800000000",
                 "endTimeUnixNano": "1737000101500000000",
                 "attributes": [
-                  {"key": "gen_ai.operation.name",  "value": {"stringValue": "execute_tool"}},
-                  {"key": "gen_ai.tool.name",       "value": {"stringValue": "web_search"}},
-                  {"key": "gen_ai.conversation.id", "value": {"stringValue": "conv-2"}},
-                  {"key": "gen_ai.agent.id",        "value": {"stringValue": "agent-A"}}
+                  {
+                    "key": "gen_ai.operation.name",
+                    "value": {
+                      "stringValue": "execute_tool"
+                    }
+                  },
+                  {
+                    "key": "gen_ai.tool.name",
+                    "value": {
+                      "stringValue": "web_search"
+                    }
+                  },
+                  {
+                    "key": "gen_ai.conversation.id",
+                    "value": {
+                      "stringValue": "conv-2"
+                    }
+                  },
+                  {
+                    "key": "gen_ai.agent.id",
+                    "value": {
+                      "stringValue": "agent-A"
+                    }
+                  }
                 ],
-                "status": {"code": 1}
+                "status": {
+                  "code": 1
+                }
               },
               {
                 "traceId": "11111111111111111111111111111111",
@@ -74,16 +168,58 @@
                 "startTimeUnixNano": "1737000101600000000",
                 "endTimeUnixNano": "1737000102900000000",
                 "attributes": [
-                  {"key": "gen_ai.operation.name",      "value": {"stringValue": "chat"}},
-                  {"key": "gen_ai.provider.name",       "value": {"stringValue": "anthropic"}},
-                  {"key": "gen_ai.request.model",       "value": {"stringValue": "claude-sonnet-4-5"}},
-                  {"key": "gen_ai.response.model",      "value": {"stringValue": "claude-sonnet-4-5"}},
-                  {"key": "gen_ai.conversation.id",     "value": {"stringValue": "conv-2"}},
-                  {"key": "gen_ai.agent.id",            "value": {"stringValue": "agent-A"}},
-                  {"key": "gen_ai.usage.input_tokens",  "value": {"intValue": "300"}},
-                  {"key": "gen_ai.usage.output_tokens", "value": {"intValue": "200"}}
+                  {
+                    "key": "gen_ai.operation.name",
+                    "value": {
+                      "stringValue": "chat"
+                    }
+                  },
+                  {
+                    "key": "gen_ai.provider.name",
+                    "value": {
+                      "stringValue": "anthropic"
+                    }
+                  },
+                  {
+                    "key": "gen_ai.request.model",
+                    "value": {
+                      "stringValue": "claude-sonnet-4-5"
+                    }
+                  },
+                  {
+                    "key": "gen_ai.response.model",
+                    "value": {
+                      "stringValue": "claude-sonnet-4-5"
+                    }
+                  },
+                  {
+                    "key": "gen_ai.conversation.id",
+                    "value": {
+                      "stringValue": "conv-2"
+                    }
+                  },
+                  {
+                    "key": "gen_ai.agent.id",
+                    "value": {
+                      "stringValue": "agent-A"
+                    }
+                  },
+                  {
+                    "key": "gen_ai.usage.input_tokens",
+                    "value": {
+                      "intValue": "300"
+                    }
+                  },
+                  {
+                    "key": "gen_ai.usage.output_tokens",
+                    "value": {
+                      "intValue": "200"
+                    }
+                  }
                 ],
-                "status": {"code": 1}
+                "status": {
+                  "code": 1
+                }
               }
             ]
           }
@@ -93,20 +229,21 @@
   },
   "expected_graph": {
     "nodes": {
-      "Session":   1,
-      "Agent":     1,
-      "Model":     1,
-      "Tool":      1,
-      "Operation": 4
+      "Session": 1,
+      "Agent": 1,
+      "Model": 1,
+      "Tool": 1,
+      "Operation": 4,
+      "Resource": 1
     },
     "edges": {
-      "CONTAINS":  4,
-      "INVOKED":   1,
-      "EXECUTED":  2,
-      "CALLED":    1,
+      "CONTAINS": 4,
+      "INVOKED": 1,
+      "EXECUTED": 2,
+      "CALLED": 1,
       "PARENT_OF": 3
     },
-    "total_nodes": 8,
+    "total_nodes": 9,
     "total_edges": 11
   }
 }

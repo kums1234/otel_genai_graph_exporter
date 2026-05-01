@@ -131,6 +131,12 @@ class Operation:
 
     The span_id is the natural key — distinct spans are distinct operations
     even when they share a trace_id or conversation.id.
+
+    ``service_name`` is denormalised from the parent OTel resource (the
+    ``service.name`` attribute on ``resourceSpans[*].resource``). Carrying
+    it on the Operation lets analytical queries — "cost per service",
+    "errors per service" — partition without a join in DuckDB, and serves
+    as the natural FK to the ``Resource`` node in Neo4j.
     """
     span_id: str
     trace_id: str
@@ -143,6 +149,7 @@ class Operation:
     output_tokens: Optional[int] = None
     cost_usd: Optional[float] = None
     error_message: Optional[str] = None
+    service_name: Optional[str] = None
 
     @property
     def key(self) -> NodeKey:

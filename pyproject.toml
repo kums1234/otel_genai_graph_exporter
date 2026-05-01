@@ -46,19 +46,34 @@ classifiers = [
 dependencies = [
     "opentelemetry-api>=1.27",
     "opentelemetry-sdk>=1.27",
-    "neo4j>=5.20",
     "python-dotenv>=1.0",
 ]
 
 [project.optional-dependencies]
+# Pick at least one backend extra:
+#   pip install 'otel-genai-graph[neo4j]'    # graph backend
+#   pip install 'otel-genai-graph[duckdb]'   # SQL analytical backend
+#   pip install 'otel-genai-graph[all]'      # both, for tooling that switches
+neo4j = [
+    "neo4j>=5.20",
+]
+duckdb = [
+    "duckdb>=1.0",
+]
+all = [
+    "neo4j>=5.20",
+    "duckdb>=1.0",
+]
+otlp = [
+    "opentelemetry-exporter-otlp-proto-http>=1.27",
+]
 dev = [
     "pytest>=8",
     "pytest-cov>=5",
     "ruff>=0.6",
     "mypy>=1.11",
-]
-otlp = [
-    "opentelemetry-exporter-otlp-proto-http>=1.27",
+    "neo4j>=5.20",
+    "duckdb>=1.0",
 ]
 
 [project.scripts]

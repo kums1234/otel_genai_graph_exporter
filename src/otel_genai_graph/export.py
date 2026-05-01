@@ -345,6 +345,7 @@ def _node_from_neo4j(label: str, props: dict) -> Any:
             start_ns=props.get("start_ns"),
             end_ns=props.get("end_ns"),
             error_message=props.get("error_message"),
+            service_name=props.get("service_name"),
         )
     # generic pass-through
     return _GenericNode(label=label, props=dict(props))

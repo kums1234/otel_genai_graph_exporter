@@ -31,6 +31,13 @@ Notes:
 * **DataSource is a v1.37 extension.** The spec doesn't standardise
   retrieval yet. We adopt `gen_ai.data_source.id` as the pending
   convention — swap it when the WG lands one.
+* **`Operation.service_name` is denormalised** from the parent OTel
+  resource (`resourceSpans[*].resource.service.name`). Carrying it on
+  every Operation gives the SQL backend a `service_name` column for
+  partitioning ("cost per service") without a join, and gives the graph
+  backend a property pointing at the matching `Resource` node. We don't
+  emit a separate `Operation → Resource` edge — the FK column carries
+  the same information at less cost.
 
 ## Edges
 

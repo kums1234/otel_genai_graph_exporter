@@ -6,12 +6,20 @@
       {
         "resource": {
           "attributes": [
-            {"key": "service.name", "value": {"stringValue": "chat-app"}}
+            {
+              "key": "service.name",
+              "value": {
+                "stringValue": "chat-app"
+              }
+            }
           ]
         },
         "scopeSpans": [
           {
-            "scope": {"name": "opentelemetry.instrumentation.anthropic", "version": "0.40.0"},
+            "scope": {
+              "name": "opentelemetry.instrumentation.anthropic",
+              "version": "0.40.0"
+            },
             "spans": [
               {
                 "traceId": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa1",
@@ -22,15 +30,52 @@
                 "startTimeUnixNano": "1737000500000000000",
                 "endTimeUnixNano": "1737000500600000000",
                 "attributes": [
-                  {"key": "gen_ai.operation.name",      "value": {"stringValue": "chat"}},
-                  {"key": "gen_ai.provider.name",       "value": {"stringValue": "anthropic"}},
-                  {"key": "gen_ai.request.model",       "value": {"stringValue": "claude-sonnet-4-5"}},
-                  {"key": "gen_ai.response.model",      "value": {"stringValue": "claude-sonnet-4-5"}},
-                  {"key": "gen_ai.conversation.id",     "value": {"stringValue": "conv-multi"}},
-                  {"key": "gen_ai.usage.input_tokens",  "value": {"intValue": "50"}},
-                  {"key": "gen_ai.usage.output_tokens", "value": {"intValue": "40"}}
+                  {
+                    "key": "gen_ai.operation.name",
+                    "value": {
+                      "stringValue": "chat"
+                    }
+                  },
+                  {
+                    "key": "gen_ai.provider.name",
+                    "value": {
+                      "stringValue": "anthropic"
+                    }
+                  },
+                  {
+                    "key": "gen_ai.request.model",
+                    "value": {
+                      "stringValue": "claude-sonnet-4-5"
+                    }
+                  },
+                  {
+                    "key": "gen_ai.response.model",
+                    "value": {
+                      "stringValue": "claude-sonnet-4-5"
+                    }
+                  },
+                  {
+                    "key": "gen_ai.conversation.id",
+                    "value": {
+                      "stringValue": "conv-multi"
+                    }
+                  },
+                  {
+                    "key": "gen_ai.usage.input_tokens",
+                    "value": {
+                      "intValue": "50"
+                    }
+                  },
+                  {
+                    "key": "gen_ai.usage.output_tokens",
+                    "value": {
+                      "intValue": "40"
+                    }
+                  }
                 ],
-                "status": {"code": 1}
+                "status": {
+                  "code": 1
+                }
               }
             ]
           }
@@ -39,12 +84,20 @@
       {
         "resource": {
           "attributes": [
-            {"key": "service.name", "value": {"stringValue": "chat-app"}}
+            {
+              "key": "service.name",
+              "value": {
+                "stringValue": "chat-app"
+              }
+            }
           ]
         },
         "scopeSpans": [
           {
-            "scope": {"name": "opentelemetry.instrumentation.anthropic", "version": "0.40.0"},
+            "scope": {
+              "name": "opentelemetry.instrumentation.anthropic",
+              "version": "0.40.0"
+            },
             "spans": [
               {
                 "traceId": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb2",
@@ -55,15 +108,52 @@
                 "startTimeUnixNano": "1737000560000000000",
                 "endTimeUnixNano": "1737000560700000000",
                 "attributes": [
-                  {"key": "gen_ai.operation.name",      "value": {"stringValue": "chat"}},
-                  {"key": "gen_ai.provider.name",       "value": {"stringValue": "anthropic"}},
-                  {"key": "gen_ai.request.model",       "value": {"stringValue": "claude-sonnet-4-5"}},
-                  {"key": "gen_ai.response.model",      "value": {"stringValue": "claude-sonnet-4-5"}},
-                  {"key": "gen_ai.conversation.id",     "value": {"stringValue": "conv-multi"}},
-                  {"key": "gen_ai.usage.input_tokens",  "value": {"intValue": "110"}},
-                  {"key": "gen_ai.usage.output_tokens", "value": {"intValue": "90"}}
+                  {
+                    "key": "gen_ai.operation.name",
+                    "value": {
+                      "stringValue": "chat"
+                    }
+                  },
+                  {
+                    "key": "gen_ai.provider.name",
+                    "value": {
+                      "stringValue": "anthropic"
+                    }
+                  },
+                  {
+                    "key": "gen_ai.request.model",
+                    "value": {
+                      "stringValue": "claude-sonnet-4-5"
+                    }
+                  },
+                  {
+                    "key": "gen_ai.response.model",
+                    "value": {
+                      "stringValue": "claude-sonnet-4-5"
+                    }
+                  },
+                  {
+                    "key": "gen_ai.conversation.id",
+                    "value": {
+                      "stringValue": "conv-multi"
+                    }
+                  },
+                  {
+                    "key": "gen_ai.usage.input_tokens",
+                    "value": {
+                      "intValue": "110"
+                    }
+                  },
+                  {
+                    "key": "gen_ai.usage.output_tokens",
+                    "value": {
+                      "intValue": "90"
+                    }
+                  }
                 ],
-                "status": {"code": 1}
+                "status": {
+                  "code": 1
+                }
               }
             ]
           }
@@ -72,12 +162,20 @@
       {
         "resource": {
           "attributes": [
-            {"key": "service.name", "value": {"stringValue": "chat-app"}}
+            {
+              "key": "service.name",
+              "value": {
+                "stringValue": "chat-app"
+              }
+            }
           ]
         },
         "scopeSpans": [
           {
-            "scope": {"name": "opentelemetry.instrumentation.anthropic", "version": "0.40.0"},
+            "scope": {
+              "name": "opentelemetry.instrumentation.anthropic",
+              "version": "0.40.0"
+            },
             "spans": [
               {
                 "traceId": "ccccccccccccccccccccccccccccccc3",
@@ -88,15 +186,52 @@
                 "startTimeUnixNano": "1737000620000000000",
                 "endTimeUnixNano": "1737000620900000000",
                 "attributes": [
-                  {"key": "gen_ai.operation.name",      "value": {"stringValue": "chat"}},
-                  {"key": "gen_ai.provider.name",       "value": {"stringValue": "anthropic"}},
-                  {"key": "gen_ai.request.model",       "value": {"stringValue": "claude-sonnet-4-5"}},
-                  {"key": "gen_ai.response.model",      "value": {"stringValue": "claude-sonnet-4-5"}},
-                  {"key": "gen_ai.conversation.id",     "value": {"stringValue": "conv-multi"}},
-                  {"key": "gen_ai.usage.input_tokens",  "value": {"intValue": "180"}},
-                  {"key": "gen_ai.usage.output_tokens", "value": {"intValue": "150"}}
+                  {
+                    "key": "gen_ai.operation.name",
+                    "value": {
+                      "stringValue": "chat"
+                    }
+                  },
+                  {
+                    "key": "gen_ai.provider.name",
+                    "value": {
+                      "stringValue": "anthropic"
+                    }
+                  },
+                  {
+                    "key": "gen_ai.request.model",
+                    "value": {
+                      "stringValue": "claude-sonnet-4-5"
+                    }
+                  },
+                  {
+                    "key": "gen_ai.response.model",
+                    "value": {
+                      "stringValue": "claude-sonnet-4-5"
+                    }
+                  },
+                  {
+                    "key": "gen_ai.conversation.id",
+                    "value": {
+                      "stringValue": "conv-multi"
+                    }
+                  },
+                  {
+                    "key": "gen_ai.usage.input_tokens",
+                    "value": {
+                      "intValue": "180"
+                    }
+                  },
+                  {
+                    "key": "gen_ai.usage.output_tokens",
+                    "value": {
+                      "intValue": "150"
+                    }
+                  }
                 ],
-                "status": {"code": 1}
+                "status": {
+                  "code": 1
+                }
               }
             ]
           }
@@ -106,15 +241,16 @@
   },
   "expected_graph": {
     "nodes": {
-      "Session":   1,
-      "Model":     1,
-      "Operation": 3
+      "Session": 1,
+      "Model": 1,
+      "Operation": 3,
+      "Resource": 1
     },
     "edges": {
       "CONTAINS": 3,
       "EXECUTED": 3
     },
-    "total_nodes": 5,
+    "total_nodes": 6,
     "total_edges": 6
   }
 }

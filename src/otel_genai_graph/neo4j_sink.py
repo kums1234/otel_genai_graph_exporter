@@ -56,7 +56,8 @@ _NODE_CYPHER: dict[str, str] = {
         "    n.end_ns        = r.end_ns, "
         "    n.input_tokens  = r.input_tokens, "
         "    n.output_tokens = r.output_tokens, "
-        "    n.error_message = r.error_message"
+        "    n.error_message = r.error_message, "
+        "    n.service_name  = coalesce(r.service_name, n.service_name)"
     ),
     NodeLabel.RESOURCE.value:
         "UNWIND $rows AS r MERGE (n:Resource {service_name: r.service_name}) "

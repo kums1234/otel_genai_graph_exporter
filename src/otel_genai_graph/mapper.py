@@ -27,6 +27,7 @@ from .schema import (
     Graph,
     Model,
     Operation,
+    Resource,
     Session,
     Status,
     Tool,
@@ -156,9 +157,23 @@ def _unix_ns(raw: Any) -> Optional[int]:
 def map_spans(resource_spans: list[dict[str, Any]]) -> Graph:
     graph = Graph()
 
-    # Sweep 1: flatten spans
+    # Sweep 1: flatten spans, capturing the parent resource's service_name
+    # so each Operation can be partitioned by emitting service.
     parsed: list[dict[str, Any]] = []
     for rs in resource_spans or []:
+        res_attrs = _attrs_to_dict((rs.get("resource") or {}).get("attributes", []))
+        service_name    = res_attrs.get("service.name")
+        service_version = res_attrs.get("service.version")
+
+        # Emit one Resource node per distinct service.name. Re-emitting the
+        # same (service_name, version) pair is a no-op via Graph.add_node's
+        # last-write-wins semantics on the natural key.
+        if service_name:
+            graph.add_node(Resource(
+                service_name=str(service_name),
+                service_version=str(service_version) if service_version else None,
+            ))
+
         for ss in rs.get("scopeSpans", []) or []:
             for span in ss.get("spans", []) or []:
                 attrs = _attrs_to_dict(span.get("attributes", []))
@@ -173,6 +188,7 @@ def map_spans(resource_spans: list[dict[str, Any]]) -> Graph:
                         "status_message": (span.get("status") or {}).get("message"),
                         "start_ns": _unix_ns(span.get("startTimeUnixNano")),
                         "end_ns": _unix_ns(span.get("endTimeUnixNano")),
+                        "service_name": str(service_name) if service_name else None,
                     }
                 )
 
@@ -220,6 +236,7 @@ def _emit(
         input_tokens=attrs.get("gen_ai.usage.input_tokens"),
         output_tokens=attrs.get("gen_ai.usage.output_tokens"),
         error_message=s["status_message"] if final_status == Status.ERROR.value else None,
+        service_name=s.get("service_name"),
     )
     graph.add_node(op)
 
