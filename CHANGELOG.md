@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.2.1] - 2026-05-02
+
+### Fixed
+
+- `otel_genai_graph.__version__` is now derived from `importlib.metadata.version("otel-genai-graph")` instead of being hard-coded in `__init__.py`. The hard-coded constant lagged a release behind `pyproject.toml`: v0.2.0 shipped with `__version__ == "0.1.0"` even though the wheel itself was correctly tagged `0.2.0`. New invariant test (`tests/test_version.py`) locks the import-side version against the distribution metadata so this can't drift again.
+
 ## [0.2.0] - 2026-05-02
 
 ### Added
@@ -69,6 +75,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 - Cost lives as `Operation.cost_usd` property; a dedicated `Budget` node for roll-ups is deferred to a later release.
 - No built-in back-pressure policy on the live `SpanExporter`; high-volume ingest may need a bulk-load mode.
 
-[Unreleased]: https://github.com/kums1234/otel_genai_graph_exporter/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/kums1234/otel_genai_graph_exporter/compare/v0.2.1...HEAD
+[0.2.1]:      https://github.com/kums1234/otel_genai_graph_exporter/releases/tag/v0.2.1
 [0.2.0]:      https://github.com/kums1234/otel_genai_graph_exporter/releases/tag/v0.2.0
 [0.1.0]:      https://github.com/kums1234/otel_genai_graph_exporter/releases/tag/v0.1.0
