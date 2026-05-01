@@ -6,6 +6,38 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-05-02
+
+### Added
+
+- **DuckDB as a first-class alternative backend** alongside Neo4j. Pick at startup: `--backend duckdb --duckdb-path ./trace.duckdb`, or via the `OTGG_BACKEND` env var. Defaults to `neo4j` to preserve prior behaviour.
+- New `Sink` protocol (`otel_genai_graph.sink.Sink`) that both `Neo4jSink` and the new `DuckDBSink` satisfy structurally — no inheritance required. `make_sink(config)` factory dispatches on `Neo4jConfig` / `DuckDBConfig` tagged-union configs. `config_from_env` and `resolve_backend` resolve CLI flags, env vars, and defaults.
+- `DuckDBSink` (`otel_genai_graph.duckdb_sink.DuckDBSink`) writes a denormalised analytics-shaped schema:
+  - Wide **`ops`** table — one row per Operation with structural edges flattened as FK columns (`session_id`, `agent_id`, `model_provider`, `model_name`, `tool_name`, `data_source_id`, `parent_span_id`, `service_name`).
+  - Dimension tables: `sessions`, `agents`, `models`, `tools`, `data_sources`, `resources`.
+  - `agent_delegations` side table for the `Agent → Agent` edge.
+  - Idempotent `INSERT … ON CONFLICT … DO UPDATE` upserts in a single transaction. `_OPS_SCHEMA` drives both DDL and the upsert SQL — adding a column is a one-line edit.
+- Parallel SQL saved-query library (`otel_genai_graph.saved_queries_sql`) — 12 named queries paralleling the Cypher library, including a recursive-CTE `cost_by_agent_with_descendants` that walks the delegation graph, `cost_by_model`, `cost_by_session`, `tool_usage`, `failed_tools`, `agent_delegation_chains`, …
+- Generic `GenAIExporter` (`otel_genai_graph.exporter.GenAIExporter`) accepts any `Sink`. `Neo4jGenAIExporter` is retained as an alias subclass for back-compat — existing imports keep working.
+- **`Resource` nodes are now emitted by the mapper** from `resourceSpans[*].resource.service.name`, closing the v0.1 known limitation. The `Resource` dimension table in DuckDB is no longer always-empty.
+- **`Operation.service_name`** is denormalised onto every operation as the natural FK to `Resource`. Lights up "cost per service" as a no-join SQL query in DuckDB and as a queryable property in Neo4j. See [`docs/mapping.md`](docs/mapping.md) and [`docs/schema.md`](docs/schema.md) for the contract.
+- Open Graph social-preview image (`docs/images/og.png`, 1200×630) for repo URL shares; `og.svg` is the editable source.
+- README "Backends — Neo4j or DuckDB" section documenting the asymmetry (Neo4j: graph viz; DuckDB: SQL analytics) and the choice point.
+
+### Changed
+
+- `pyproject.toml`: `neo4j` moved from base dependencies to a new `[neo4j]` optional extra alongside the new `[duckdb]` and `[all]` extras. The `[dev]` extra installs both for local development.
+- The fixture suite's `expected_graph` blocks (`tests/fixtures/*.json`) and the `TraceBuilder` accounting (`tests/generate_traces.py`) gained one `Resource` node per fixture, reflecting the mapper change.
+
+### Breaking
+
+- **`pip install otel-genai-graph` no longer pulls the Neo4j driver.** Pick at install time: `pip install 'otel-genai-graph[neo4j]'`, `pip install 'otel-genai-graph[duckdb]'`, or `pip install 'otel-genai-graph[all]'` for both.
+- **`Resource` nodes are now emitted.** Queries that count *total* nodes (e.g., `MATCH (n) RETURN count(n)`) will see N+1 results per resource bundle. Per-label queries are unaffected; this only matters for naïve totals.
+
+### Tests
+
+- 489 passing, 18 skipped (live `NEO4J_URI` integration tests). `test_duckdb_sink.py` covers row-builder unit tests, per-fixture round-trips against an in-memory DuckDB, double-write idempotency, file persistence, and the `Sink` protocol satisfaction contract.
+
 ## [0.1.0] - 2026-04-24
 
 ### Added
@@ -37,5 +69,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 - Cost lives as `Operation.cost_usd` property; a dedicated `Budget` node for roll-ups is deferred to a later release.
 - No built-in back-pressure policy on the live `SpanExporter`; high-volume ingest may need a bulk-load mode.
 
-[Unreleased]: https://github.com/kums1234/otel_genai_graph_exporter/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/kums1234/otel_genai_graph_exporter/compare/v0.2.0...HEAD
+[0.2.0]:      https://github.com/kums1234/otel_genai_graph_exporter/releases/tag/v0.2.0
 [0.1.0]:      https://github.com/kums1234/otel_genai_graph_exporter/releases/tag/v0.1.0
