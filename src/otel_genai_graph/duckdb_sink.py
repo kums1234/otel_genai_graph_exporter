@@ -43,7 +43,6 @@ across processes; running two instances against the same file races.
 """
 from __future__ import annotations
 
-import dataclasses
 from collections import defaultdict
 from typing import Any, Optional
 
