@@ -240,12 +240,23 @@ def test_live_exporter_end_to_end() -> None:
                 "WHERE m.provider='anthropic' AND m.name='claude-haiku-4-5' "
                 "RETURN count(m) AS c"
             ).single()
+            resource_row = sess.run(
+                "MATCH (r:Resource {service_name:'live-exporter-test'}) RETURN count(r) AS c"
+            ).single()
+            ops_with_service = sess.run(
+                "MATCH (o:Operation) WHERE o.service_name = 'live-exporter-test' "
+                "RETURN count(o) AS c"
+            ).single()
 
-        # expected graph: 1 Session + 1 Agent + 1 Model + 2 Operations = 5 nodes
+        # expected graph: 1 Session + 1 Agent + 1 Model + 2 Operations + 1 Resource = 6 nodes
         # edges: CONTAINS×2 + INVOKED + EXECUTED + PARENT_OF = 5
-        assert nodes == 5
+        assert nodes == 6
         assert edges == 5
         assert session_row["c"] == 2
         assert executed_row["c"] == 1
+        # Resource node is emitted from the TracerProvider's resource attribute,
+        # and every Operation carries service_name as a denormalised FK.
+        assert resource_row["c"] == 1
+        assert ops_with_service["c"] == 2
     finally:
         provider.shutdown()  # closes the sink as a side-effect via exporter.shutdown()
