@@ -87,10 +87,17 @@ The mapper reads only these attributes (plus resource attributes for
 
 Resource attributes used:
 
-| Resource attribute     | Used for                  |
-|------------------------|---------------------------|
-| `service.name`         | `Resource.service_name`   |
-| `service.version`      | `Resource.service_version`|
+| Resource attribute     | Used for                                         |
+|------------------------|--------------------------------------------------|
+| `service.name`         | `Resource.service_name`, **also stamped onto every `Operation.service_name`** emitted from that resource bundle |
+| `service.version`      | `Resource.service_version`                       |
+
+The `service.name` denormalisation onto `Operation` is intentional. With
+the SQL backend (DuckDB) it lets `SELECT … FROM ops WHERE service_name = ?`
+partition by emitting service in one column, no join required; with the
+graph backend (Neo4j) it stays as a property on the Operation node and
+serves as the natural key into the `Resource` dimension. A future edge
+(`Operation` → `Resource`) is unnecessary while the FK column suffices.
 
 Everything else is ignored. That's intentional — the mapping is a
 **projection**, not a lossless translation.

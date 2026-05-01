@@ -127,6 +127,11 @@ class TraceBuilder:
                     ],
                 }
             )
+            # The mapper emits a Resource node from the resource.service.name
+            # attribute. Recording it here keeps the expected_graph in sync
+            # with what the mapper actually produces. Same service_name across
+            # flushes naturally dedupes via the (label, id) dict key.
+            self.nodes[("Resource", self.service_name)] = "Resource"
             self._current_spans = []
 
     # --- low-level span emit ----------------------------------------------

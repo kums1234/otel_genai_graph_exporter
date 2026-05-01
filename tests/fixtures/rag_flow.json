@@ -1,17 +1,25 @@
 {
   "name": "rag_flow",
-  "description": "Classic RAG: embeddings → retrieve from vector store → chat with retrieved context. Exercises DataSource and RETRIEVED_FROM.",
+  "description": "Classic RAG: embeddings \u2192 retrieve from vector store \u2192 chat with retrieved context. Exercises DataSource and RETRIEVED_FROM.",
   "otlp": {
     "resourceSpans": [
       {
         "resource": {
           "attributes": [
-            {"key": "service.name", "value": {"stringValue": "rag-service"}}
+            {
+              "key": "service.name",
+              "value": {
+                "stringValue": "rag-service"
+              }
+            }
           ]
         },
         "scopeSpans": [
           {
-            "scope": {"name": "opentelemetry.instrumentation.llamaindex", "version": "0.3.0"},
+            "scope": {
+              "name": "opentelemetry.instrumentation.llamaindex",
+              "version": "0.3.0"
+            },
             "spans": [
               {
                 "traceId": "33333333333333333333333333333333",
@@ -22,15 +30,52 @@
                 "startTimeUnixNano": "1737000300000000000",
                 "endTimeUnixNano": "1737000300200000000",
                 "attributes": [
-                  {"key": "gen_ai.operation.name",      "value": {"stringValue": "embeddings"}},
-                  {"key": "gen_ai.provider.name",       "value": {"stringValue": "openai"}},
-                  {"key": "gen_ai.request.model",       "value": {"stringValue": "text-embedding-3-small"}},
-                  {"key": "gen_ai.response.model",      "value": {"stringValue": "text-embedding-3-small"}},
-                  {"key": "gen_ai.conversation.id",     "value": {"stringValue": "conv-4"}},
-                  {"key": "gen_ai.usage.input_tokens",  "value": {"intValue": "20"}},
-                  {"key": "gen_ai.usage.output_tokens", "value": {"intValue": "0"}}
+                  {
+                    "key": "gen_ai.operation.name",
+                    "value": {
+                      "stringValue": "embeddings"
+                    }
+                  },
+                  {
+                    "key": "gen_ai.provider.name",
+                    "value": {
+                      "stringValue": "openai"
+                    }
+                  },
+                  {
+                    "key": "gen_ai.request.model",
+                    "value": {
+                      "stringValue": "text-embedding-3-small"
+                    }
+                  },
+                  {
+                    "key": "gen_ai.response.model",
+                    "value": {
+                      "stringValue": "text-embedding-3-small"
+                    }
+                  },
+                  {
+                    "key": "gen_ai.conversation.id",
+                    "value": {
+                      "stringValue": "conv-4"
+                    }
+                  },
+                  {
+                    "key": "gen_ai.usage.input_tokens",
+                    "value": {
+                      "intValue": "20"
+                    }
+                  },
+                  {
+                    "key": "gen_ai.usage.output_tokens",
+                    "value": {
+                      "intValue": "0"
+                    }
+                  }
                 ],
-                "status": {"code": 1}
+                "status": {
+                  "code": 1
+                }
               },
               {
                 "traceId": "33333333333333333333333333333333",
@@ -41,12 +86,34 @@
                 "startTimeUnixNano": "1737000300300000000",
                 "endTimeUnixNano": "1737000300500000000",
                 "attributes": [
-                  {"key": "gen_ai.operation.name",  "value": {"stringValue": "retrieve"}},
-                  {"key": "gen_ai.data_source.id",  "value": {"stringValue": "vector-store-kb1"}},
-                  {"key": "gen_ai.data_source.kind","value": {"stringValue": "vector_store"}},
-                  {"key": "gen_ai.conversation.id", "value": {"stringValue": "conv-4"}}
+                  {
+                    "key": "gen_ai.operation.name",
+                    "value": {
+                      "stringValue": "retrieve"
+                    }
+                  },
+                  {
+                    "key": "gen_ai.data_source.id",
+                    "value": {
+                      "stringValue": "vector-store-kb1"
+                    }
+                  },
+                  {
+                    "key": "gen_ai.data_source.kind",
+                    "value": {
+                      "stringValue": "vector_store"
+                    }
+                  },
+                  {
+                    "key": "gen_ai.conversation.id",
+                    "value": {
+                      "stringValue": "conv-4"
+                    }
+                  }
                 ],
-                "status": {"code": 1}
+                "status": {
+                  "code": 1
+                }
               },
               {
                 "traceId": "33333333333333333333333333333333",
@@ -57,15 +124,52 @@
                 "startTimeUnixNano": "1737000300600000000",
                 "endTimeUnixNano": "1737000301800000000",
                 "attributes": [
-                  {"key": "gen_ai.operation.name",      "value": {"stringValue": "chat"}},
-                  {"key": "gen_ai.provider.name",       "value": {"stringValue": "anthropic"}},
-                  {"key": "gen_ai.request.model",       "value": {"stringValue": "claude-sonnet-4-5"}},
-                  {"key": "gen_ai.response.model",      "value": {"stringValue": "claude-sonnet-4-5"}},
-                  {"key": "gen_ai.conversation.id",     "value": {"stringValue": "conv-4"}},
-                  {"key": "gen_ai.usage.input_tokens",  "value": {"intValue": "800"}},
-                  {"key": "gen_ai.usage.output_tokens", "value": {"intValue": "120"}}
+                  {
+                    "key": "gen_ai.operation.name",
+                    "value": {
+                      "stringValue": "chat"
+                    }
+                  },
+                  {
+                    "key": "gen_ai.provider.name",
+                    "value": {
+                      "stringValue": "anthropic"
+                    }
+                  },
+                  {
+                    "key": "gen_ai.request.model",
+                    "value": {
+                      "stringValue": "claude-sonnet-4-5"
+                    }
+                  },
+                  {
+                    "key": "gen_ai.response.model",
+                    "value": {
+                      "stringValue": "claude-sonnet-4-5"
+                    }
+                  },
+                  {
+                    "key": "gen_ai.conversation.id",
+                    "value": {
+                      "stringValue": "conv-4"
+                    }
+                  },
+                  {
+                    "key": "gen_ai.usage.input_tokens",
+                    "value": {
+                      "intValue": "800"
+                    }
+                  },
+                  {
+                    "key": "gen_ai.usage.output_tokens",
+                    "value": {
+                      "intValue": "120"
+                    }
+                  }
                 ],
-                "status": {"code": 1}
+                "status": {
+                  "code": 1
+                }
               }
             ]
           }
@@ -75,18 +179,19 @@
   },
   "expected_graph": {
     "nodes": {
-      "Session":    1,
-      "Model":      2,
+      "Session": 1,
+      "Model": 2,
       "DataSource": 1,
-      "Operation":  3
+      "Operation": 3,
+      "Resource": 1
     },
     "edges": {
-      "CONTAINS":       3,
-      "EXECUTED":       2,
+      "CONTAINS": 3,
+      "EXECUTED": 2,
       "RETRIEVED_FROM": 1,
-      "PARENT_OF":      2
+      "PARENT_OF": 2
     },
-    "total_nodes": 7,
+    "total_nodes": 8,
     "total_edges": 8
   }
 }

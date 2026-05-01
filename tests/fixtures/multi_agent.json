@@ -1,17 +1,25 @@
 {
   "name": "multi_agent",
-  "description": "Orchestrator agent delegates to a specialist agent. Exercises DELEGATED_TO (Agent → Agent).",
+  "description": "Orchestrator agent delegates to a specialist agent. Exercises DELEGATED_TO (Agent \u2192 Agent).",
   "otlp": {
     "resourceSpans": [
       {
         "resource": {
           "attributes": [
-            {"key": "service.name", "value": {"stringValue": "multi-agent-app"}}
+            {
+              "key": "service.name",
+              "value": {
+                "stringValue": "multi-agent-app"
+              }
+            }
           ]
         },
         "scopeSpans": [
           {
-            "scope": {"name": "opentelemetry.instrumentation.langgraph", "version": "0.2.0"},
+            "scope": {
+              "name": "opentelemetry.instrumentation.langgraph",
+              "version": "0.2.0"
+            },
             "spans": [
               {
                 "traceId": "22222222222222222222222222222222",
@@ -22,12 +30,34 @@
                 "startTimeUnixNano": "1737000200000000000",
                 "endTimeUnixNano": "1737000205000000000",
                 "attributes": [
-                  {"key": "gen_ai.operation.name",  "value": {"stringValue": "invoke_agent"}},
-                  {"key": "gen_ai.agent.id",        "value": {"stringValue": "orchestrator"}},
-                  {"key": "gen_ai.agent.name",      "value": {"stringValue": "orchestrator"}},
-                  {"key": "gen_ai.conversation.id", "value": {"stringValue": "conv-3"}}
+                  {
+                    "key": "gen_ai.operation.name",
+                    "value": {
+                      "stringValue": "invoke_agent"
+                    }
+                  },
+                  {
+                    "key": "gen_ai.agent.id",
+                    "value": {
+                      "stringValue": "orchestrator"
+                    }
+                  },
+                  {
+                    "key": "gen_ai.agent.name",
+                    "value": {
+                      "stringValue": "orchestrator"
+                    }
+                  },
+                  {
+                    "key": "gen_ai.conversation.id",
+                    "value": {
+                      "stringValue": "conv-3"
+                    }
+                  }
                 ],
-                "status": {"code": 1}
+                "status": {
+                  "code": 1
+                }
               },
               {
                 "traceId": "22222222222222222222222222222222",
@@ -38,12 +68,34 @@
                 "startTimeUnixNano": "1737000200500000000",
                 "endTimeUnixNano": "1737000204500000000",
                 "attributes": [
-                  {"key": "gen_ai.operation.name",  "value": {"stringValue": "invoke_agent"}},
-                  {"key": "gen_ai.agent.id",        "value": {"stringValue": "specialist"}},
-                  {"key": "gen_ai.agent.name",      "value": {"stringValue": "sql-specialist"}},
-                  {"key": "gen_ai.conversation.id", "value": {"stringValue": "conv-3"}}
+                  {
+                    "key": "gen_ai.operation.name",
+                    "value": {
+                      "stringValue": "invoke_agent"
+                    }
+                  },
+                  {
+                    "key": "gen_ai.agent.id",
+                    "value": {
+                      "stringValue": "specialist"
+                    }
+                  },
+                  {
+                    "key": "gen_ai.agent.name",
+                    "value": {
+                      "stringValue": "sql-specialist"
+                    }
+                  },
+                  {
+                    "key": "gen_ai.conversation.id",
+                    "value": {
+                      "stringValue": "conv-3"
+                    }
+                  }
                 ],
-                "status": {"code": 1}
+                "status": {
+                  "code": 1
+                }
               },
               {
                 "traceId": "22222222222222222222222222222222",
@@ -54,16 +106,58 @@
                 "startTimeUnixNano": "1737000200800000000",
                 "endTimeUnixNano": "1737000204000000000",
                 "attributes": [
-                  {"key": "gen_ai.operation.name",      "value": {"stringValue": "chat"}},
-                  {"key": "gen_ai.provider.name",       "value": {"stringValue": "anthropic"}},
-                  {"key": "gen_ai.request.model",       "value": {"stringValue": "claude-opus-4-7"}},
-                  {"key": "gen_ai.response.model",      "value": {"stringValue": "claude-opus-4-7"}},
-                  {"key": "gen_ai.conversation.id",     "value": {"stringValue": "conv-3"}},
-                  {"key": "gen_ai.agent.id",            "value": {"stringValue": "specialist"}},
-                  {"key": "gen_ai.usage.input_tokens",  "value": {"intValue": "500"}},
-                  {"key": "gen_ai.usage.output_tokens", "value": {"intValue": "300"}}
+                  {
+                    "key": "gen_ai.operation.name",
+                    "value": {
+                      "stringValue": "chat"
+                    }
+                  },
+                  {
+                    "key": "gen_ai.provider.name",
+                    "value": {
+                      "stringValue": "anthropic"
+                    }
+                  },
+                  {
+                    "key": "gen_ai.request.model",
+                    "value": {
+                      "stringValue": "claude-opus-4-7"
+                    }
+                  },
+                  {
+                    "key": "gen_ai.response.model",
+                    "value": {
+                      "stringValue": "claude-opus-4-7"
+                    }
+                  },
+                  {
+                    "key": "gen_ai.conversation.id",
+                    "value": {
+                      "stringValue": "conv-3"
+                    }
+                  },
+                  {
+                    "key": "gen_ai.agent.id",
+                    "value": {
+                      "stringValue": "specialist"
+                    }
+                  },
+                  {
+                    "key": "gen_ai.usage.input_tokens",
+                    "value": {
+                      "intValue": "500"
+                    }
+                  },
+                  {
+                    "key": "gen_ai.usage.output_tokens",
+                    "value": {
+                      "intValue": "300"
+                    }
+                  }
                 ],
-                "status": {"code": 1}
+                "status": {
+                  "code": 1
+                }
               }
             ]
           }
@@ -73,19 +167,20 @@
   },
   "expected_graph": {
     "nodes": {
-      "Session":   1,
-      "Agent":     2,
-      "Model":     1,
-      "Operation": 3
+      "Session": 1,
+      "Agent": 2,
+      "Model": 1,
+      "Operation": 3,
+      "Resource": 1
     },
     "edges": {
-      "CONTAINS":     3,
-      "INVOKED":      2,
-      "EXECUTED":     1,
-      "PARENT_OF":    2,
+      "CONTAINS": 3,
+      "INVOKED": 2,
+      "EXECUTED": 1,
+      "PARENT_OF": 2,
       "DELEGATED_TO": 1
     },
-    "total_nodes": 7,
+    "total_nodes": 8,
     "total_edges": 9
   }
 }

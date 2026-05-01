@@ -39,32 +39,75 @@ same graph coordinate system.
 
 - **Ingests** OTLP/JSON `resourceSpans` from any GenAI-instrumented app — OpenAI, Anthropic, Gemini, Azure OpenAI (classic / v1 / Foundry unified), Ollama, Groq, and anything OpenAI-SDK-compatible.
 - **Maps** to a typed graph: `Session` → `Operation` → `Model` / `Tool` / `DataSource`, `Agent` ─`INVOKED`→ `Operation`, `Agent` ─`DELEGATED_TO`→ `Agent`.
-- **Writes idempotently** to Neo4j via `MERGE` on natural keys. Re-ingesting the same trace is a no-op.
+- **Writes idempotently** to your choice of backend — Neo4j (graph) or DuckDB (SQL analytics, single-file `.duckdb`). Re-ingesting the same trace is a no-op on both.
 - **Streams live or loads files** — ships a `SpanExporter` (plug into any `TracerProvider`) and a file loader (`python -m otel_genai_graph.load trace.json …`).
 - **Explores without Cypher** — a library of 10 saved queries (`cost_by_model`, `session_tree`, `agent_delegation`, `failed_tools`, …) exports to interactive HTML (cytoscape.js, single file, no install), node-link JSON, GraphML, or CSV/ASCII tables.
 - **Speaks legacy and canonical v1.37** — `gen_ai.system → gen_ai.provider.name`, `generate_content → chat`, plus a priority-ordered `conversation.id` fallback list (`session.id`, `langsmith.trace.session_id`, `traceloop.association.properties.*`). Canonical emitters always win; everything else gets pulled into the same graph.
 - **Enforces 7 shape-independent invariants** on every graph — edge endpoint types, Session uniqueness, DAG property of parent / delegation edges, no orphan Models / Tools / DataSources, token-count and time-ordering sanity.
+
+## Backends — Neo4j or DuckDB
+
+Pick one at startup. The mapper, invariants, and OTel exporter are identical
+either way — the same `Graph` is built; only the projection differs.
+
+| Backend | Best for | Output shape | Graph viz | Install |
+|---|---|---|---|---|
+| **Neo4j** | "show me the graph" — agent delegation chains, tool blast radius, session trees rendered as cytoscape HTML | Typed nodes + edges, traversable | ✅ via `tools/render_graph.py` | `pip install 'otel-genai-graph[neo4j]'` |
+| **DuckDB** | "give me the numbers" — cost rollups, per-session SQL aggregates, a single-file `.duckdb` you can email | Wide `ops` table + dim tables, denormalised for analytics | ❌ — query directly with SQL | `pip install 'otel-genai-graph[duckdb]'` |
+
+The asymmetry is intentional. DuckDB users want `SELECT … FROM ops` and a
+column-oriented file they can hand to anyone with a SQL client; forcing
+that into a graph mirror would betray why someone picks DuckDB. Use Neo4j
+when you want graph traversals and visual exploration; use DuckDB when
+you want analytics, CI gates, or air-gapped portability.
+
+**Switching backend** — CLI flag wins, then env var, then the default
+(`neo4j`, preserving prior behaviour):
+
+```bash
+# CLI flag
+python -m otel_genai_graph.load tests/fixtures/*.json \
+    --backend duckdb --duckdb-path ./trace.duckdb
+
+# or env vars
+export OTGG_BACKEND=duckdb
+export DUCKDB_PATH=./trace.duckdb
+python -m otel_genai_graph.load tests/fixtures/*.json
+```
+
+`tools/render_graph.py` (the cytoscape HTML / GraphML renderer) is the
+Neo4j-only surface. For DuckDB, query directly with the `duckdb` CLI or
+any SQL client; the parallel saved-query library lives at
+[`src/otel_genai_graph/saved_queries_sql.py`](src/otel_genai_graph/saved_queries_sql.py)
+(`cost_by_model`, `cost_by_agent_with_descendants`, `tool_usage`, …).
 
 ## 60-second quickstart
 
 ```bash
 git clone https://github.com/kums1234/otel_genai_graph_exporter.git && cd otel-genai-graph
 python3 -m venv .venv && . .venv/bin/activate
-pip install -e ".[dev]"
-pytest                                    # 833 unit/integration tests
+pip install -e ".[dev]"                   # dev pulls both backends
+pytest                                    # full unit/integration suite
 
-# optional: live Neo4j + load the six sample fixtures
+# ── Path A: Neo4j (graph viz, saved Cypher queries) ──
 docker run -d --name otel-neo4j \
     -p 17474:7474 -p 17687:7687 \
     -e NEO4J_AUTH=neo4j/testtest neo4j:5
-
-# configure connection + API keys once — shell env vars always win
-cp .env.example .env          # then uncomment / fill in what you need
+cp .env.example .env                      # fill in NEO4J_*; shell env wins
 
 python -m otel_genai_graph.load tests/fixtures/*.json
-# explore — no Cypher required:
 python tools/render_graph.py --from-neo4j --query overview \
     --output /tmp/overview --format html && open /tmp/overview.html
+
+# ── Path B: DuckDB (SQL analytics, single-file output) ──
+python -m otel_genai_graph.load tests/fixtures/*.json \
+    --backend duckdb --duckdb-path ./trace.duckdb
+
+duckdb ./trace.duckdb \
+    "SELECT model_provider, model_name, count(*) AS calls,
+            sum(coalesce(input_tokens,0)+coalesce(output_tokens,0)) AS tokens
+     FROM ops WHERE model_provider IS NOT NULL
+     GROUP BY 1,2 ORDER BY tokens DESC"
 ```
 
 ### Configuration
