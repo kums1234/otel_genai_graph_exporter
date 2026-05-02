@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "otel-genai-graph"
-version = "0.2.0"
+version = "0.2.1"
 description = "OpenTelemetry GenAI spans → queryable Neo4j graph. Mixed-vendor cost attribution, agent delegation, tool blast radius — one command, zero Cypher."
 readme = "README.md"
 requires-python = ">=3.10"
