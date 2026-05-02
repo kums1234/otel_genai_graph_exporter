@@ -67,13 +67,35 @@ jobs:
         run: |
           set -euo pipefail
           VERSION="${GITHUB_REF_NAME#v}"
-          # Pull everything between ## [VERSION] and the next ## [ heading.
-          awk "/^## \\[$VERSION\\]/,/^## \\[/" CHANGELOG.md \
-              | sed '$d' > /tmp/release-notes.md
+
+          # State-machine extraction. The previous range expression
+          # `/^## \[VERSION\]/,/^## \[/` produced a one-line range — both
+          # patterns matched the version heading itself, so the range
+          # collapsed and `sed '$d'` then stripped that single line,
+          # yielding an empty file for every release. v0.2.0's release
+          # body ended up as the "no CHANGELOG entry" placeholder despite
+          # the entry being present.
+          awk -v ver="$VERSION" '
+            $0 ~ "^## \\[" ver "\\]" { in_section = 1; next }
+            in_section && /^## \[/   { exit }
+            in_section               { print }
+          ' CHANGELOG.md > /tmp/release-notes.md
+
+          # If we found no content for this version, fall through to a
+          # DRAFT release with a clear placeholder body. Drafts surface
+          # in the Releases UI as "unpublished" — a much louder signal
+          # than a published release with placeholder text.
           if [ ! -s /tmp/release-notes.md ]; then
-            echo "_No CHANGELOG.md entry for $VERSION — please update before releasing._" \
-                > /tmp/release-notes.md
+            cat > /tmp/release-notes.md <<EOF
+          _No CHANGELOG.md entry for **$VERSION** at tag time — release was auto-created as a **draft**.
+          Edit the body and publish from the Releases UI, or run
+          \`gh release edit v$VERSION --notes-file release-notes/$VERSION.md --draft=false\`._
+          EOF
+            echo "draft=true"  >> "$GITHUB_OUTPUT"
+          else
+            echo "draft=false" >> "$GITHUB_OUTPUT"
           fi
+
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
       - uses: softprops/action-gh-release@v2
         with:
@@ -81,5 +103,5 @@ jobs:
           name: v${{ steps.notes.outputs.version }}
           body_path: /tmp/release-notes.md
           files: dist/*
-          draft: false
+          draft: ${{ steps.notes.outputs.draft }}
           prerelease: ${{ contains(github.ref_name, '-') }}
