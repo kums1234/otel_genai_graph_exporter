@@ -1,0 +1,127 @@
+name: Bug report
+description: Something isn't working as expected — load fails, query returns wrong shape, mapper drops a field, etc.
+title: "[Bug] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to file a bug. The four required fields below
+        ([what happened, repro, version, Python version]) cover ~90% of what's
+        needed to reproduce locally — the more specific you can be, the faster
+        the fix.
+
+        For usage questions or "is this the right tool for X?" prompts, please
+        use [Discussions](https://github.com/kums1234/otel_genai_graph_exporter/discussions) instead.
+
+  - type: textarea
+    id: what_happened
+    attributes:
+      label: What happened?
+      description: |
+        One paragraph. What did you try, and what went wrong?
+        Screenshots welcome but please paste any error text as text, not images.
+      placeholder: |
+        I ran `python -m otel_genai_graph.load my_trace.json --backend duckdb --duckdb-path ./out.duckdb` and got a KeyError on `gen_ai.provider.name` when the trace was emitted by …
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to reproduce
+      description: |
+        Minimal commands or a small fixture file that triggers the bug.
+        If the trace is sensitive, scrub it and paste a small excerpt — three
+        OTLP/JSON spans is usually enough.
+      render: shell
+      placeholder: |
+        # 1. install
+        pip install 'otel-genai-graph[duckdb]==0.2.1'
+
+        # 2. tiny trace that triggers the bug
+        cat > bug.json <<'EOF'
+        {"otlp": {"resourceSpans": [...]}}
+        EOF
+
+        # 3. run
+        python -m otel_genai_graph.load bug.json --backend duckdb --duckdb-path /tmp/out.duckdb
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected_vs_actual
+    attributes:
+      label: Expected vs actual
+      description: What did you expect to happen? What happened instead?
+      placeholder: |
+        Expected: load succeeds, `ops` has one row.
+        Actual: KeyError before anything is written.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: backend
+    attributes:
+      label: Backend
+      description: Which sink were you using when the bug appeared?
+      options:
+        - DuckDB
+        - Neo4j
+        - Both
+        - Not applicable / I don't know
+      default: 0
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: otel-genai-graph version
+      description: |
+        From `pip show otel-genai-graph` or
+        `python -c "import otel_genai_graph; print(otel_genai_graph.__version__)"`.
+      placeholder: "0.2.1"
+    validations:
+      required: true
+
+  - type: input
+    id: python_version
+    attributes:
+      label: Python version
+      description: Output of `python --version`.
+      placeholder: "Python 3.13.12"
+    validations:
+      required: true
+
+  - type: input
+    id: os
+    attributes:
+      label: OS
+      description: e.g. macOS 15.5, Ubuntu 24.04, Windows 11. Optional but useful for path / file-system bugs.
+      placeholder: "macOS 15.5"
+
+  - type: textarea
+    id: traceback
+    attributes:
+      label: Traceback or full error output
+      description: Paste the entire traceback if there is one. Long is fine.
+      render: shell
+
+  - type: textarea
+    id: extra
+    attributes:
+      label: Anything else?
+      description: |
+        Anything that didn't fit above. Suspected root cause, possible workaround,
+        related issues — all welcome.
+
+  - type: checkboxes
+    id: confirmation
+    attributes:
+      label: Confirmation
+      options:
+        - label: I've searched the existing issues and this is not a duplicate.
+          required: true
+        - label: I've removed any sensitive data (API keys, prompts, real user content) from the trace excerpt and traceback above.
+          required: true
