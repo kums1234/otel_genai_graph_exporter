@@ -1,0 +1,21 @@
+# Issue template chooser config.
+#
+# Sets the contact-link panel on the "New issue" page and disables blank
+# issues so first-time reporters land on a structured template instead
+# of a free-text box.
+blank_issues_enabled: false
+contact_links:
+  - name: Question or usage discussion
+    url: https://github.com/kums1234/otel_genai_graph_exporter/discussions
+    about: |
+      For "how do I…" questions, design discussions, or "is this the right tool
+      for X?" prompts, please open a Discussion instead. Bug reports and
+      reproducible issues belong here; everything else is more discoverable
+      to other users in Discussions.
+  - name: OTel GenAI semantic conventions
+    url: https://github.com/open-telemetry/semantic-conventions/tree/main/docs/gen-ai
+    about: |
+      If your bug looks like a divergence between your emitter and what this
+      project expects (legacy attribute names, missing conversation.id, etc.),
+      the upstream spec is often the source of truth. Worth checking before
+      filing.
